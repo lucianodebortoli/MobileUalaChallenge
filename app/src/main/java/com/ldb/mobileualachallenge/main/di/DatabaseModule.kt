@@ -1,9 +1,11 @@
-package com.ldb.mobileualachallenge.feature.cities.di
+package com.ldb.mobileualachallenge.main.di
 
 import android.content.Context
 import androidx.room.Room
 import com.ldb.mobileualachallenge.feature.cities.data.local.dao.CityDao
-import com.ldb.mobileualachallenge.feature.cities.data.local.database.AppDatabase
+import com.ldb.mobileualachallenge.feature.cities.data.local.dao.FavoriteCityDao
+import com.ldb.mobileualachallenge.feature.cities.data.local.dao.CityWithFavoritesDao
+import com.ldb.mobileualachallenge.main.data.database.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +28,18 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideCityDao(database: AppDatabase): CityDao = database.cityDao()
+    fun provideCityDao(database: AppDatabase): CityDao {
+        return database.cityDao()
+    }
+
+    @Provides
+    fun provideFavoriteCityDao(database: AppDatabase): FavoriteCityDao {
+        return database.favoriteCityDao()
+    }
+
+    @Provides
+    fun provideCityWithFavoritesDao(database: AppDatabase): CityWithFavoritesDao {
+        return database.cityWithFavoritesDao()
+    }
 
 }

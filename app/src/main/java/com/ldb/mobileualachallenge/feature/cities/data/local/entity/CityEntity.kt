@@ -8,9 +8,7 @@ typealias CityEntityId = Long
 
 @Entity(
     tableName = "cities",
-    indices = [
-        Index(value = ["name"])
-    ]
+    indices = [Index(value = ["name"])]
 )
 data class CityEntity(
     @PrimaryKey val id: CityEntityId,

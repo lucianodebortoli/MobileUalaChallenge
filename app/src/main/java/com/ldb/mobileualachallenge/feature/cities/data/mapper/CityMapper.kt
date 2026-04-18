@@ -2,13 +2,13 @@ package com.ldb.mobileualachallenge.feature.cities.data.mapper
 
 import com.ldb.mobileualachallenge.feature.cities.data.local.entity.CityEntity
 import com.ldb.mobileualachallenge.feature.cities.data.local.entity.CityWithFavoriteEntity
-import com.ldb.mobileualachallenge.feature.cities.data.remote.dto.CityRemoteDto
+import com.ldb.mobileualachallenge.feature.cities.data.remote.dto.GistCityDto
 import com.ldb.mobileualachallenge.feature.cities.domain.model.City
 
 // Remote Mappers
 
-/** Maps remote [CityRemoteDto] to local [CityEntity] */
-fun CityRemoteDto.toLocal(): CityEntity = CityEntity(
+/** Maps remote [GistCityDto] to local [CityEntity] */
+fun GistCityDto.toLocal(): CityEntity = CityEntity(
     id = id,
     name = name,
     country = countryPrefix,

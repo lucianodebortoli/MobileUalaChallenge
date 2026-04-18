@@ -1,4 +1,4 @@
-package com.ldb.mobileualachallenge.main.navigation
+package com.ldb.mobileualachallenge.main.presentation.navigation
 
 object Routes {
     const val CITY_LIST = "city_list"

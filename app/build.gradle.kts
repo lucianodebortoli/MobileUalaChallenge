@@ -71,23 +71,23 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    // Room
+    // Room & Paging
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.room.paging)
     ksp(libs.androidx.room.compiler)
-
-    // Paging
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
 
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.moshi)
-
-    // HTTP
+    // OkHttp
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
+
+    // Retrofit & Moshi
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
 
     // Testing
     testImplementation(libs.junit)

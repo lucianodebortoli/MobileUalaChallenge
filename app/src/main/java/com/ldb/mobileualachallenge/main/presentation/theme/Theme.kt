@@ -1,4 +1,4 @@
-package com.ldb.mobileualachallenge.main.theme
+package com.ldb.mobileualachallenge.main.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

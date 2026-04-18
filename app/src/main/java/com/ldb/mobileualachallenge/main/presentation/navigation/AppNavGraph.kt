@@ -1,4 +1,4 @@
-package com.ldb.mobileualachallenge.main.navigation
+package com.ldb.mobileualachallenge.main.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController

@@ -1,4 +1,4 @@
-package com.ldb.mobileualachallenge.main.theme
+package com.ldb.mobileualachallenge.main.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -3,13 +3,13 @@ package com.ldb.mobileualachallenge.feature.cities.data.remote.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-typealias CityRemoteDtoId = Long
+typealias GistCityDtoId = Long
 
 @Serializable
-data class CityRemoteDto(
+data class GistCityDto(
     @SerialName("country") val countryPrefix: String,
     @SerialName("name") val name: String,
-    @SerialName("_id") val id: CityRemoteDtoId,
+    @SerialName("_id") val id: GistCityDtoId,
     @SerialName("coord") val coordinates: Coordinates
 ) {
     @Serializable
