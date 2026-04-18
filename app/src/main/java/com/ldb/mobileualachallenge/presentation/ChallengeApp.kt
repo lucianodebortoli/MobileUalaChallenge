@@ -1,7 +1,7 @@
 package com.ldb.mobileualachallenge.presentation
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-// TODO annotate hilt
-class ChallengeApp : Application() {
-}
+@HiltAndroidApp
+class ChallengeApp : Application()

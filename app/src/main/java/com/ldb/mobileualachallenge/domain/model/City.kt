@@ -1,7 +1,16 @@
 package com.ldb.mobileualachallenge.domain.model
 
-typealias CityId = String
+typealias CityId = Long
 
 data class City(
-    val id: CityId
-)
+    val id: CityId,
+    val countryPrefix: String,
+    val name: String,
+    val coordinates: Coordinates,
+    val isFavorite: Boolean
+) {
+    data class Coordinates(
+        val latitude: Double,
+        val longitude: Double
+    )
+}

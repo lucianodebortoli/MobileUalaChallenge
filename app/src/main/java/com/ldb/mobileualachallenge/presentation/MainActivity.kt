@@ -6,8 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.ldb.mobileualachallenge.presentation.navigation.AppNavGraph
 import com.ldb.mobileualachallenge.presentation.theme.ChallengeTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO annotate hilt
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

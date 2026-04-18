@@ -1,5 +1,5 @@
 package com.ldb.mobileualachallenge.data.remote.api
 
-interface CityRemoteApi {
+interface CityApi {
 
 }

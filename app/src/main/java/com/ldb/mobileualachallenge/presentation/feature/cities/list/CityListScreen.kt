@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
 import com.ldb.mobileualachallenge.presentation.common.CustomTopBar
@@ -24,7 +25,7 @@ private fun AdaptiveCityListContent(
     onBackClicked: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
-    // TODO val viewModel: CityListViewModel = hiltViewModel()
+    val viewModel: CityListViewModel = hiltViewModel()
     Scaffold(
         topBar = {
             CustomTopBar(

@@ -1,8 +1,13 @@
 package com.ldb.mobileualachallenge.presentation.feature.cities.list
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-// TODO add hilt annotation
-class CityListViewModel : ViewModel() {
+@HiltViewModel
+class CityListViewModel @Inject constructor(
+
+) : ViewModel() {
+
 
 }
