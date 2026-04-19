@@ -10,9 +10,9 @@ import com.ldb.mobileualachallenge.feature.cities.data.local.entity.FavoriteCity
 interface FavoriteCityDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addFavoriteCity(favorite: FavoriteCityEntity)
+    suspend fun addFavorite(favorite: FavoriteCityEntity)
 
     @Delete
-    suspend fun removeFavoriteCity(favorite: FavoriteCityEntity)
+    suspend fun removeFavorite(favorite: FavoriteCityEntity)
 
 }

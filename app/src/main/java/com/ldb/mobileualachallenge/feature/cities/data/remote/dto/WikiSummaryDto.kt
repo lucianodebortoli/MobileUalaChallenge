@@ -14,7 +14,7 @@ data class WikiSummaryDto(
 
     @Serializable
     data class ImageSource(
-        @SerialName("source") val source: String
+        @SerialName("source") val url: String
     )
 
 }

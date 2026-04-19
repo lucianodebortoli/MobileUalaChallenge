@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ldb.mobileualachallenge.feature.cities.data.local.entity.CityEntity
+import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 
 @Dao
 interface CityDao {
@@ -21,10 +22,10 @@ interface CityDao {
     fun getCities(): PagingSource<Int, CityEntity>
 
     @Query(
-        value = "SELECT * FROM cities " +
-                "WHERE name LIKE :query || '%' COLLATE NOCASE " +
-                "ORDER BY name"
+        value = "SELECT * " +
+                "FROM cities " +
+                "WHERE id = :cityId"
     )
-    fun searchCities(query: String): PagingSource<Int, CityEntity>
+    fun getCity(cityId: CityId): PagingSource<Int, CityEntity>
 
 }

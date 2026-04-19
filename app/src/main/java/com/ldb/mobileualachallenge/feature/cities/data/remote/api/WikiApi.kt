@@ -9,15 +9,15 @@ import retrofit2.http.Query
 
 interface WikiApi {
 
+    @GET("api/rest_v1/page/summary/{title}")
+    suspend fun getSummary(
+        @Path("title") title: String
+    ): Response<WikiSummaryDto>
+
     @GET("w/rest.php/v1/search/page")
     suspend fun searchPage(
         @Query("q") query: String,
         @Query("limit") limit: Int = 1
     ): Response<WikiSearchDto>
-
-    @GET("api/rest_v1/page/summary/{title}")
-    suspend fun getSummary(
-        @Path("title") title: String
-    ): Response<WikiSummaryDto>
 
 }

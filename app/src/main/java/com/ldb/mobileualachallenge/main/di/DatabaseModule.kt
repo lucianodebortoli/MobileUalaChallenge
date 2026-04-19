@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.ldb.mobileualachallenge.feature.cities.data.local.dao.CityDao
 import com.ldb.mobileualachallenge.feature.cities.data.local.dao.FavoriteCityDao
-import com.ldb.mobileualachallenge.feature.cities.data.local.dao.CityWithFavoritesDao
+import com.ldb.mobileualachallenge.feature.cities.data.local.dao.CityFavoriteJoinedDao
 import com.ldb.mobileualachallenge.main.data.database.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -38,7 +38,7 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideCityWithFavoritesDao(database: AppDatabase): CityWithFavoritesDao {
+    fun provideCityWithFavoritesDao(database: AppDatabase): CityFavoriteJoinedDao {
         return database.cityWithFavoritesDao()
     }
 
