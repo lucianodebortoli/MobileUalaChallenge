@@ -1,20 +1,17 @@
 package com.ldb.mobileualachallenge.feature.cities.data.remote.dto
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
 
 typealias GistCityDtoId = Long
 
-@Serializable
 data class GistCityDto(
-    @SerialName("country") val countryPrefix: String,
-    @SerialName("name") val name: String,
-    @SerialName("_id") val id: GistCityDtoId,
-    @SerialName("coord") val coordinates: Coordinates
+    @param:Json(name = "country") val countryPrefix: String,
+    @param:Json(name = "name") val name: String,
+    @param:Json(name = "_id") val id: GistCityDtoId,
+    @param:Json(name = "coord") val coordinates: Coordinates
 ) {
-    @Serializable
     data class Coordinates(
-        @SerialName("lon") val longitude: Double,
-        @SerialName("lat") val latitude: Double
+        @param:Json(name = "lon") val longitude: Double,
+        @param:Json(name = "lat") val latitude: Double
     )
 }

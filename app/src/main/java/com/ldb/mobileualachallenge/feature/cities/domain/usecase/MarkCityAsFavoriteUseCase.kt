@@ -7,12 +7,12 @@ import javax.inject.Singleton
 
 
 @Singleton
-class UpdateCityUseCase @Inject constructor(
+class MarkCityAsFavoriteUseCase @Inject constructor(
     private val repository: CityRepository
 )  {
 
-    suspend operator fun invoke(cityId: CityId, isFavorite: Boolean) {
-        when (isFavorite) {
+    suspend operator fun invoke(cityId: CityId, isFavorite: Boolean): Result<Unit> {
+        return when (isFavorite) {
             true -> repository.markFavoriteCity(cityId)
             false -> repository.unmarkFavoriteCity(cityId)
         }

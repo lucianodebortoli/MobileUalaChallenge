@@ -13,7 +13,7 @@ class GetCitiesUseCase @Inject constructor(
 )  {
 
     operator fun invoke(
-        searchQuery: String? = null,
+        searchQuery: String = "",
         filterFavorites: Boolean
     ): Flow<PagingData<City>> {
         return repository.getCities(

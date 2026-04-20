@@ -7,5 +7,7 @@
     <string name="feature_cities_list_empty">No cities found</string>
     <string name="feature_cities_list_error">Error loading cities!</string>
     <string name="feature_cities_list_syncing">Loading cities…</string>
+    <string name="feature_cities_error_mark_favorite">Error marking city as favorite</string>
+    <string name="feature_cities_error_get_city">Error getting city</string>
 
 </resources>

@@ -1,20 +1,17 @@
 package com.ldb.mobileualachallenge.feature.cities.data.remote.dto
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
 
-@Serializable
 data class WikiSummaryDto(
-    @SerialName("title") val title: String?,
-    @SerialName("description") val description: String?,
-    @SerialName("extract") val extract: String?,
-    @SerialName("thumbnail") val thumbnail: ImageSource?,
-    @SerialName("originalimage") val image: ImageSource?,
+    @param:Json(name = "title") val title: String?,
+    @param:Json(name = "description") val description: String?,
+    @param:Json(name = "extract") val extract: String?,
+    @param:Json(name = "thumbnail") val thumbnail: ImageSource?,
+    @param:Json(name = "originalimage") val image: ImageSource?,
 ) {
 
-    @Serializable
     data class ImageSource(
-        @SerialName("source") val url: String
+        @param:Json(name = "source") val url: String
     )
 
 }

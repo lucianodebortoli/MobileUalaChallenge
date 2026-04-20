@@ -1,13 +1,19 @@
 package com.ldb.mobileualachallenge.feature.cities.presentation.component.item
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
@@ -17,10 +23,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.domain.extension.toggled
 import com.ldb.mobileualachallenge.core.presentation.component.button.CoreButton
@@ -45,10 +54,13 @@ fun CityListItem(
     data: CityListItemData,
     isSelected: Boolean,
     onDetailsClicked: () -> Unit,
-    onFavoriteClicked: (Boolean) -> Unit
+    onFavoriteClicked: (Boolean) -> Unit,
+    onClick: () -> Unit
 ) {
     CoreOutlinedSurface(
-        modifier = modifier,
+        modifier = modifier.clickable {
+            onClick()
+        },
         borderColor = when (isSelected) {
             true -> MaterialTheme.colorScheme.primary
             false -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
@@ -62,18 +74,15 @@ fun CityListItem(
             false -> MaterialTheme.colorScheme.onSurface
         },
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimensions.Spacing.medium),
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.small)
-            ) {
+            Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.extraSmall)) {
                 Text(
                     text = data.title,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = data.subtitle,
@@ -85,8 +94,18 @@ fun CityListItem(
                 )
             }
             FavoriteStarButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
                 isFavorite = data.isFavorite,
                 onClicked = onFavoriteClicked
+            )
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(Dimensions.IconSize.medium),
+                imageVector = Icons.Default.LocationOn,
+                tint = MaterialTheme.colorScheme.primaryContainer,
+                contentDescription = "Location Icon"
             )
         }
     }
@@ -115,10 +134,12 @@ private fun DetailsButton(
 
 @Composable
 private fun FavoriteStarButton(
+    modifier: Modifier = Modifier,
     isFavorite: Boolean,
     onClicked: (Boolean) -> Unit
 ) {
     Button(
+        modifier = modifier.size(Dimensions.IconSize.medium),
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
@@ -129,7 +150,6 @@ private fun FavoriteStarButton(
         }
     ) {
         Icon(
-            modifier = Modifier.size(Dimensions.IconSize.medium),
             imageVector = when (isFavorite) {
                 true -> Icons.Filled.Star
                 false -> Icons.Outlined.Star
@@ -174,7 +194,8 @@ private fun Preview() {
                     data = data,
                     isSelected = index % 2 == 1,
                     onDetailsClicked = {},
-                    onFavoriteClicked = {}
+                    onFavoriteClicked = {},
+                    onClick = {}
                 )
             }
         }

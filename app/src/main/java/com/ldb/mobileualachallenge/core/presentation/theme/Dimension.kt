@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 data class SpacingDimensions(
+    val extraSmall: Dp,
     val small: Dp,
     val medium: Dp,
     val large: Dp
@@ -32,6 +33,7 @@ object Dimensions {
     val Zero: Dp = 0.dp
 
     val Spacing = SpacingDimensions(
+        extraSmall = 4.dp,
         small = 8.dp,
         medium = 12.dp,
         large = 16.dp

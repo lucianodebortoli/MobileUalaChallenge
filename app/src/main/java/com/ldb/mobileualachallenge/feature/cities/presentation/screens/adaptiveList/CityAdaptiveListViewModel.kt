@@ -5,14 +5,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.domain.extension.toggled
+import com.ldb.mobileualachallenge.feature.cities.domain.model.City
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.domain.usecase.GetCitiesUseCase
+import com.ldb.mobileualachallenge.feature.cities.domain.usecase.GetCityUseCase
 import com.ldb.mobileualachallenge.feature.cities.domain.usecase.SyncCitiesUseCase
+import com.ldb.mobileualachallenge.feature.cities.domain.usecase.MarkCityAsFavoriteUseCase
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItemData
 import com.ldb.mobileualachallenge.feature.cities.presentation.mapper.toItemData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +33,13 @@ import javax.inject.Inject
 @HiltViewModel
 class CityAdaptiveListViewModel @Inject constructor(
     val syncCitiesUseCase: SyncCitiesUseCase,
-    val getCitiesUseCase: GetCitiesUseCase
+    val getCitiesUseCase: GetCitiesUseCase,
+    val getCityUseCase: GetCityUseCase,
+    val markCityAsFavoriteUseCase: MarkCityAsFavoriteUseCase
 ) : ViewModel() {
+
+    private val _actions = Channel<CityAdaptiveListAction>()
+    val actions = _actions.receiveAsFlow()
 
     private val _syncState = MutableStateFlow<SyncState>(value = SyncState.Syncing)
     val syncState = _syncState.asStateFlow()
@@ -39,8 +50,8 @@ class CityAdaptiveListViewModel @Inject constructor(
     private val _favoritesOnly = MutableStateFlow(value = false)
     val favoritesOnly = _favoritesOnly.asStateFlow()
 
-    private val _selectedCityId = MutableStateFlow<CityId?>(value = null)
-    val selectedCityId = _selectedCityId.asStateFlow()
+    private val _selectedCity = MutableStateFlow<City?>(value = null)
+    val selectedCity = _selectedCity.asStateFlow()
 
     /**
      * The flow of paginated items.
@@ -78,9 +89,10 @@ class CityAdaptiveListViewModel @Inject constructor(
         when (event) {
             is CityAdaptiveListEvent.OnFilterButtonClicked -> onFilterButtonClicked()
             is CityAdaptiveListEvent.OnCityDetailsClicked -> onCityDetailsClicked(event.cityId)
-            is CityAdaptiveListEvent.OnCityFavoriteClicked -> onCityFavoriteButtonClicked(event.cityId, event.isFavorite)
+            is CityAdaptiveListEvent.OnCityFavoriteChanged -> onCityFavoriteButtonClicked(event.cityId, event.isFavorite)
             is CityAdaptiveListEvent.OnSearchQueryChanged -> onSearchQueryChanged(event.query)
             is CityAdaptiveListEvent.OnSyncRetryClicked -> onSyncRetryClicked()
+            is CityAdaptiveListEvent.OnCityClicked -> onCityClicked(event.cityId)
         }
     }
 
@@ -88,16 +100,45 @@ class CityAdaptiveListViewModel @Inject constructor(
         _favoritesOnly.value = _favoritesOnly.value.toggled()
     }
 
-    private fun onCityDetailsClicked(cityId: CityId) {
-        // TODO navigate to details
+    private fun onCityDetailsClicked(cityId: CityId) = viewModelScope.launch {
+        _actions.send(CityAdaptiveListAction.NavigateToDetail(cityId))
     }
 
-    private fun onCityFavoriteButtonClicked(cityId: CityId, favorite: Boolean) {
-        // TODO set a city as favorite
+    private fun onCityFavoriteButtonClicked(cityId: CityId, isFavorite: Boolean) = viewModelScope.launch {
+        markCityAsFavoriteUseCase(
+            cityId = cityId,
+            isFavorite = isFavorite
+        ).fold(
+            onSuccess = {
+                // do nothing
+            },
+            onFailure = {
+                _actions.send(
+                    CityAdaptiveListAction.ShowSnackbar(
+                        stringRes = R.string.feature_cities_error_mark_favorite
+                    )
+                )
+            }
+        )
     }
 
     private fun onSearchQueryChanged(query: String) {
-        _searchQuery.value
+        _searchQuery.value = query
+    }
+
+    private fun onCityClicked(cityId: CityId) = viewModelScope.launch {
+        getCityUseCase(cityId).fold(
+            onSuccess = { city ->
+                _selectedCity.value = city
+            },
+            onFailure = {
+                _actions.send(
+                    CityAdaptiveListAction.ShowSnackbar(
+                        stringRes = R.string.feature_cities_error_get_city
+                    )
+                )
+            }
+        )
     }
 
     private fun onSyncRetryClicked() {

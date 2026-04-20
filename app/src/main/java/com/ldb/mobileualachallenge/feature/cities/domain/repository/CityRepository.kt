@@ -16,13 +16,20 @@ interface CityRepository {
     suspend fun syncCities(): Result<Unit>
 
     /**
+     * Gets the city based on its id.
+     * @param cityId the [CityId] used for retrieving the [City].
+     * @return a [Result] of [City].
+     */
+    suspend fun getCity(cityId: CityId): Result<City>
+
+    /**
      * Observe paginated cities.
      * Intended to be used for listing cities.
-     * @param searchQuery a [String] for filtering cities by prefix.
+     * @param searchQuery a [String] for filtering cities by prefix. Empty string matches all cities.
      * @param filterFavorites a [Boolean] to filter only favorite cities.
      * @return a [Flow] of [PagingData] of [City].
      */
-    fun getCities(searchQuery: String?, filterFavorites: Boolean): Flow<PagingData<City>>
+    fun getCities(searchQuery: String, filterFavorites: Boolean): Flow<PagingData<City>>
 
     /**
      * Gets a city detail containing more information about the city.

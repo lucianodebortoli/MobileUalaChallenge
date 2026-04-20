@@ -3,6 +3,7 @@ package com.ldb.mobileualachallenge.feature.cities.presentation.component.sectio
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,20 +42,25 @@ fun CityListSection(
     onlyFavorites: Boolean,
     selectedItemId: CityId?,
     items: LazyPagingItems<CityListItemData>,
+    onClickItem: (CityId) -> Unit,
     onDetailsClicked: (CityId) -> Unit,
     onFavoriteClicked: (CityId, Boolean) -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onFilterButtonClicked: () -> Unit
 ) {
-    val isSearching = items.loadState.refresh is LoadState.Loading
     val isEmpty = items.loadState.refresh is LoadState.NotLoading && items.itemCount == 0
-    val listAlpha = if (isSearching) 0.5f else 1.0f
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.small)
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium)
     ) {
         CoreSearchFavoritesField(
-            modifier = Modifier.fillMaxWidth().padding(Dimensions.Spacing.medium),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = Dimensions.Spacing.medium,
+                    start = Dimensions.Spacing.medium,
+                    end = Dimensions.Spacing.medium
+                ),
             value = searchQuery,
             onlyFavorites = onlyFavorites,
             onValueChange = onSearchQueryChanged,
@@ -65,9 +71,10 @@ fun CityListSection(
             contentAlignment = Alignment.Center
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize().alpha(listAlpha),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.small)
+                verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium),
+                contentPadding = PaddingValues(Dimensions.Spacing.medium)
             ) {
                 items(
                     count = items.itemCount,
@@ -75,6 +82,7 @@ fun CityListSection(
                 ) { index ->
                     items[index]?.let { data ->
                         CityListItem(
+                            modifier = Modifier.animateItem(),
                             data = data,
                             isSelected = data.id == selectedItemId,
                             onDetailsClicked = {
@@ -82,6 +90,9 @@ fun CityListSection(
                             },
                             onFavoriteClicked = { isFavorite ->
                                 onFavoriteClicked(data.id, isFavorite)
+                            },
+                            onClick = {
+                                onClickItem(data.id)
                             }
                         )
                     }
@@ -90,11 +101,6 @@ fun CityListSection(
             if (isEmpty) {
                 CoreEmptyView(
                     title = stringResource(R.string.feature_cities_list_empty)
-                )
-            }
-            if (isSearching) {
-                CoreProgressBar(
-                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
@@ -116,7 +122,8 @@ private fun LoadingPreview() {
             onFavoriteClicked = { _, _ -> },
             onDetailsClicked = {},
             onSearchQueryChanged = {},
-            onFilterButtonClicked = {}
+            onFilterButtonClicked = {},
+            onClickItem = {}
         )
     }
 }
@@ -143,7 +150,8 @@ private fun EmptyPreview() {
             onFavoriteClicked = { _, _ -> },
             onDetailsClicked = {},
             onSearchQueryChanged = {},
-            onFilterButtonClicked = {}
+            onFilterButtonClicked = {},
+            onClickItem = {}
         )
     }
 }
@@ -162,7 +170,8 @@ private fun ListPreview() {
             onFavoriteClicked = { _, _ -> },
             onDetailsClicked = {},
             onSearchQueryChanged = {},
-            onFilterButtonClicked = {}
+            onFilterButtonClicked = {},
+            onClickItem = {}
         )
     }
 }

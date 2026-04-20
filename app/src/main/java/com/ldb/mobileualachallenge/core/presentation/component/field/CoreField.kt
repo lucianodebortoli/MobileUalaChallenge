@@ -136,9 +136,9 @@ object CoreFieldDefaults {
 
     @Composable
     fun fieldColors(): TextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        errorTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+        errorTextColor = MaterialTheme.colorScheme.error,
         focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         errorContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
