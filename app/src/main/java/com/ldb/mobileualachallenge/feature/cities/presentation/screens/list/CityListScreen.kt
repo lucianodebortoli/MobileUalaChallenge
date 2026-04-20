@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
-import com.ldb.mobileualachallenge.core.presentation.component.CustomTopBar
+import com.ldb.mobileualachallenge.core.presentation.component.CoreTopBar
 
 @Composable
 fun CityListScreen(navController: NavController) {
@@ -28,7 +28,7 @@ private fun AdaptiveCityListContent(
     val viewModel: CityListViewModel = hiltViewModel()
     Scaffold(
         topBar = {
-            CustomTopBar(
+            CoreTopBar(
                 title = "TODO",
                 onBackClicked = onBackClicked
             )

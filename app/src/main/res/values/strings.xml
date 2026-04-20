@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MobileUalaChallenge</string>
+
+    <string name="core_text_field_search">Search</string>
+
+
 </resources>

@@ -1,4 +1,4 @@
-package com.ldb.mobileualachallenge.main.presentation.theme
+package com.ldb.mobileualachallenge.core.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -12,15 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = OceanicLight,
+    secondary = GrayLight,
+    tertiary = GreenLight
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
+    primary = OceanicDark,
+    secondary = GrayDark,
+    tertiary = GreenDark,
     background = WhiteLight,
     surface = WhiteLight,
     onPrimary = Color.White,
