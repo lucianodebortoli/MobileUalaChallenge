@@ -1,5 +1,6 @@
 package com.ldb.mobileualachallenge.feature.cities.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -59,6 +60,8 @@ class CityRepositoryImpl @Inject constructor(
                         )
                     }
                 }
+            }.onFailure { exception ->
+                Log.e(LOG_TAG, "syncCities exception $exception")
             }
         }
     }
@@ -103,6 +106,8 @@ class CityRepositoryImpl @Inject constructor(
                         imageUrl = wikiSummaryDto?.image?.url ?: wikiSummaryDto?.thumbnail?.url ?: wikiSearchPageDto?.thumbnail?.url
                     )
                 )
+            }.onFailure { exception ->
+                Log.e(LOG_TAG, "getCityDetail exception $exception")
             }
         }
     }
@@ -110,13 +115,21 @@ class CityRepositoryImpl @Inject constructor(
     override suspend fun markFavoriteCity(cityId: CityId): Result<Unit> {
         return runCatching {
             favoriteCityDao.addFavorite(FavoriteCityEntity(cityId))
+        }.onFailure { exception ->
+            Log.e(LOG_TAG, "addFavorite exception $exception")
         }
     }
 
     override suspend fun unmarkFavoriteCity(cityId: CityId): Result<Unit> {
         return runCatching {
             favoriteCityDao.removeFavorite(FavoriteCityEntity(cityId))
+        }.onFailure { exception ->
+            Log.e(LOG_TAG, "removeFavorite exception $exception")
         }
+    }
+
+    companion object {
+        const val LOG_TAG = "CityRepository"
     }
 
 }

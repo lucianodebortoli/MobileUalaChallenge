@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -52,7 +54,7 @@ fun CityListSection(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.small)
     ) {
         CoreSearchFavoritesField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(Dimensions.Spacing.medium),
             value = searchQuery,
             onlyFavorites = onlyFavorites,
             onValueChange = onSearchQueryChanged,
@@ -102,7 +104,7 @@ fun CityListSection(
 @Preview
 @Composable
 private fun LoadingPreview() {
-    CorePreview {
+    CorePreview(padding = 0.dp) {
         val emptyCities: List<CityListItemData> = emptyList()
         val flow = flowOf(PagingData.from(emptyCities))
         val items = flow.collectAsLazyPagingItems()

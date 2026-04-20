@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.ldb.mobileualachallenge.core.domain.extension.toggled
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.domain.usecase.GetCitiesUseCase
+import com.ldb.mobileualachallenge.feature.cities.domain.usecase.SyncCitiesUseCase
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItemData
 import com.ldb.mobileualachallenge.feature.cities.presentation.mapper.toItemData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,21 +20,26 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class CityAdaptiveListViewModel @Inject constructor(
-    getCitiesUseCase: GetCitiesUseCase
+    val syncCitiesUseCase: SyncCitiesUseCase,
+    val getCitiesUseCase: GetCitiesUseCase
 ) : ViewModel() {
 
-    private val _searchQuery = MutableStateFlow("")
+    private val _syncState = MutableStateFlow<SyncState>(value = SyncState.Syncing)
+    val syncState = _syncState.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow(value = "")
     val searchQuery = _searchQuery.asStateFlow()
 
-    private val _favoritesOnly = MutableStateFlow(false)
+    private val _favoritesOnly = MutableStateFlow(value = false)
     val favoritesOnly = _favoritesOnly.asStateFlow()
 
-    private val _selectedCityId = MutableStateFlow<CityId?>(null)
+    private val _selectedCityId = MutableStateFlow<CityId?>(value = null)
     val selectedCityId = _selectedCityId.asStateFlow()
 
     /**
@@ -62,16 +69,51 @@ class CityAdaptiveListViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    /**
-     * Handles events from the UI layer.
-     */
+    init {
+        startSyncingProcess()
+    }
+
+    /** Handles events from the UI layer. */
     fun onEvent(event: CityAdaptiveListEvent) {
         when (event) {
-            is CityAdaptiveListEvent.OnFilterButtonClicked -> TODO()
-            is CityAdaptiveListEvent.OnDetailsClicked -> TODO()
-            is CityAdaptiveListEvent.OnFavoriteClicked -> TODO()
-            is CityAdaptiveListEvent.OnSearchQueryChanged -> TODO()
+            is CityAdaptiveListEvent.OnFilterButtonClicked -> onFilterButtonClicked()
+            is CityAdaptiveListEvent.OnCityDetailsClicked -> onCityDetailsClicked(event.cityId)
+            is CityAdaptiveListEvent.OnCityFavoriteClicked -> onCityFavoriteButtonClicked(event.cityId, event.isFavorite)
+            is CityAdaptiveListEvent.OnSearchQueryChanged -> onSearchQueryChanged(event.query)
+            is CityAdaptiveListEvent.OnSyncRetryClicked -> onSyncRetryClicked()
         }
+    }
+
+    private fun onFilterButtonClicked() {
+        _favoritesOnly.value = _favoritesOnly.value.toggled()
+    }
+
+    private fun onCityDetailsClicked(cityId: CityId) {
+        // TODO navigate to details
+    }
+
+    private fun onCityFavoriteButtonClicked(cityId: CityId, favorite: Boolean) {
+        // TODO set a city as favorite
+    }
+
+    private fun onSearchQueryChanged(query: String) {
+        _searchQuery.value
+    }
+
+    private fun onSyncRetryClicked() {
+        startSyncingProcess()
+    }
+
+    private fun startSyncingProcess() = viewModelScope.launch {
+        _syncState.value = SyncState.Syncing
+        syncCitiesUseCase().fold(
+            onSuccess = {
+                _syncState.value = SyncState.ListReady
+            },
+            onFailure = {
+                _syncState.value = SyncState.Error
+            }
+        )
     }
 
 }
