@@ -4,5 +4,6 @@
     <string name="core_text_field_search">Search</string>
 
     <string name="feature_cities_action_show_details">Details</string>
+    <string name="feature_cities_list_empty">No cities found</string>
 
 </resources>

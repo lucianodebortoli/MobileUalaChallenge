@@ -37,27 +37,27 @@ data class CityListItemData(
     val title: String,
     val subtitle: String,
     val isFavorite: Boolean,
-    val isSelected: Boolean,
 )
 
 @Composable
 fun CityListItem(
     modifier: Modifier = Modifier,
     data: CityListItemData,
+    isSelected: Boolean,
     onDetailsClicked: () -> Unit,
     onFavoriteClicked: (Boolean) -> Unit
 ) {
     CoreOutlinedSurface(
         modifier = modifier,
-        borderColor = when (data.isSelected) {
+        borderColor = when (isSelected) {
             true -> MaterialTheme.colorScheme.primary
             false -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
         },
-        surfaceColor = when (data.isSelected) {
+        surfaceColor = when (isSelected) {
             true -> MaterialTheme.colorScheme.onPrimaryContainer
             false -> MaterialTheme.colorScheme.surface
         },
-        contentColor = when (data.isSelected) {
+        contentColor = when (isSelected) {
             true -> MaterialTheme.colorScheme.primaryContainer
             false -> MaterialTheme.colorScheme.onSurface
         },
@@ -80,7 +80,7 @@ fun CityListItem(
                     style = MaterialTheme.typography.bodyMedium
                 )
                 DetailsButton(
-                    isSelected = data.isSelected,
+                    isSelected = isSelected,
                     onClicked = onDetailsClicked
                 )
             }
@@ -149,21 +149,18 @@ val cityPreviewItems: List<CityListItemData> = listOf(
         title = "Buenos Aires - AR",
         subtitle = "Coordinates",
         isFavorite = true,
-        isSelected = false
     ),
     CityListItemData(
         id = 1,
         title = "Paris - FR",
         subtitle = "Coordinates",
         isFavorite = false,
-        isSelected = true
     ),
     CityListItemData(
         id = 2,
         title = "New York - US",
         subtitle = "Coordinates",
         isFavorite = false,
-        isSelected = false
     )
 )
 
@@ -172,9 +169,10 @@ val cityPreviewItems: List<CityListItemData> = listOf(
 private fun Preview() {
     CorePreview {
         Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium)) {
-            cityPreviewItems.forEach { data ->
+            cityPreviewItems.forEachIndexed { index, data ->
                 CityListItem(
                     data = data,
+                    isSelected = index % 2 == 1,
                     onDetailsClicked = {},
                     onFavoriteClicked = {}
                 )
