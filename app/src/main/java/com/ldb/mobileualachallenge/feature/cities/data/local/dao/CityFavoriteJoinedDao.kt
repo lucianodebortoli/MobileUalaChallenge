@@ -15,9 +15,9 @@ interface CityFavoriteJoinedDao {
                 "LEFT JOIN favorite_cities f ON c.id = f.id " +
                 "WHERE (NOT :filterFavorites OR f.id IS NOT NULL) " +
                 "AND (:searchQuery IS NULL OR c.name LIKE :searchQuery COLLATE NOCASE) " +
-                "ORDER BY c.name"
+                "ORDER BY c.name ASC, c.country ASC"
     )
-    fun getCities(
+    fun getFilteredCities(
         searchQuery: String? = null,
         filterFavorites: Boolean = false
     ): PagingSource<Int, CityFavoriteEmbeddedEntity>

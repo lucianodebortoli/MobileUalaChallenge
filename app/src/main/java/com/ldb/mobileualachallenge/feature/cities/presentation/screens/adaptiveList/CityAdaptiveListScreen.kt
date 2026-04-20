@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ldb.mobileualachallenge.core.presentation.component.topbar.CoreTopBar
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListSection
 
 @Composable
 fun CityAdaptiveListScreen(navController: NavController) {
@@ -61,7 +62,7 @@ private fun PortraitCityListContent(
     Column(
         modifier = modifier
     ) {
-        Text("Portrait Screen")
+
     }
 }
 

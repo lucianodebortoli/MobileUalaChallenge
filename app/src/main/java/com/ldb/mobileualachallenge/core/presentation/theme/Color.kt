@@ -2,10 +2,10 @@ package com.ldb.mobileualachallenge.core.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-val OceanicDark = Color(0xFF005AC1)
+val OceanicDark = Color(0xFF005DC1)
 val GrayDark = Color(0xFF535F70)
-val GreenDark = Color(0xFF006A6A)
-val GoldDark = Color(0xFFBE971B)
+val GreenDark = Color(0xFF008F8F)
+val GoldDark = Color(0xFFD5A300)
 
 val GoldMedium = Color(0xFFFFC300)
 

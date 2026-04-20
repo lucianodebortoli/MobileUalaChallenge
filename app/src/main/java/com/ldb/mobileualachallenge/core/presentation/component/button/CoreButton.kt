@@ -12,7 +12,7 @@ import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePrevi
 @Composable
 fun CoreButton(
     title: String,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    colors: ButtonColors = CoreButtonDefaults.colors(),
     onClick: () -> Unit
 ) {
     Button(
@@ -21,9 +21,20 @@ fun CoreButton(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            color = colors.contentColor
         )
     }
+}
+
+object CoreButtonDefaults {
+
+    @Composable
+    fun colors(): ButtonColors = ButtonDefaults.buttonColors().copy(
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
+    )
+
 }
 
 @Preview

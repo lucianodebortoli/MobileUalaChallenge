@@ -73,7 +73,7 @@ class CityRepositoryImpl @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                cityFavoriteJoinedDao.getCities(
+                cityFavoriteJoinedDao.getFilteredCities(
                     searchQuery = searchQuery,
                     filterFavorites = filterFavorites
                 )

@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -19,6 +20,7 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
@@ -30,7 +32,7 @@ import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CoreTextField(
+fun CoreField(
     modifier: Modifier = Modifier,
     value: String,
     fieldPlaceholder: String? = null,
@@ -39,14 +41,17 @@ fun CoreTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     singleLine: Boolean = true,
-    colors: TextFieldColors = CoreTextFieldDefaults.colors(),
-    onValueChange: (String) -> Unit,
+    fieldColors: TextFieldColors = CoreFieldDefaults.fieldColors(),
+    iconColors: CoreFieldIconColors = CoreFieldDefaults.iconColors(),
     padding: PaddingValues = PaddingValues(Dimensions.Spacing.medium),
     shape: Shape = RoundedCornerShape(Dimensions.CornerRadius.medium),
     textStyle: TextStyle = TextStyle.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onValueChange: (String) -> Unit,
+    onLeadingIconClicked: () -> Unit = {},
+    onTrailingIconClicked: () -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     BasicTextField(
@@ -66,7 +71,7 @@ fun CoreTextField(
                 innerTextField = innerTextField,
                 enabled = isEnabled,
                 singleLine = singleLine,
-                colors = colors,
+                colors = fieldColors,
                 visualTransformation = VisualTransformation.None,
                 interactionSource = interactionSource,
                 isError = isError,
@@ -81,22 +86,30 @@ fun CoreTextField(
                 },
                 leadingIcon = iconLeading?.let { icon ->
                     {
-                        Icon(
+                        IconButton(
                             modifier = Modifier.size(Dimensions.IconSize.small),
-                            imageVector = icon,
-                            contentDescription = "Field Leading Icon",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                            onClick = onLeadingIconClicked
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = "Field Leading Icon",
+                                tint = iconColors.leadingIconColor
+                            )
+                        }
                     }
                 },
                 trailingIcon = iconTrailing?.let { icon ->
                     {
-                        Icon(
+                        IconButton(
                             modifier = Modifier.size(Dimensions.IconSize.small),
-                            imageVector = icon,
-                            contentDescription = "Field Trailing Icon",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                            onClick = onTrailingIconClicked
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = "Field Trailing Icon",
+                                tint = iconColors.trailingIconColor
+                            )
+                        }
                     }
                 },
                 contentPadding = padding,
@@ -105,7 +118,7 @@ fun CoreTextField(
                         enabled = isEnabled,
                         isError = isError,
                         interactionSource = interactionSource,
-                        colors = colors,
+                        colors = fieldColors,
                         shape = shape,
                     )
                 }
@@ -114,10 +127,15 @@ fun CoreTextField(
     )
 }
 
-private object CoreTextFieldDefaults {
+data class CoreFieldIconColors(
+    val leadingIconColor: Color,
+    val trailingIconColor: Color
+)
+
+object CoreFieldDefaults {
 
     @Composable
-    fun colors(): TextFieldColors = OutlinedTextFieldDefaults.colors(
+    fun fieldColors(): TextFieldColors = OutlinedTextFieldDefaults.colors(
         focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
         unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
         errorTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -131,6 +149,12 @@ private object CoreTextFieldDefaults {
         errorBorderColor = MaterialTheme.colorScheme.error,
     )
 
+    @Composable
+    fun iconColors(): CoreFieldIconColors = CoreFieldIconColors(
+        leadingIconColor = MaterialTheme.colorScheme.primary,
+        trailingIconColor = MaterialTheme.colorScheme.primary,
+    )
+
 }
 
 @Preview
@@ -138,13 +162,13 @@ private object CoreTextFieldDefaults {
 private fun FieldPreview() {
     CorePreview {
         Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium)) {
-            CoreTextField(
+            CoreField(
                 modifier = Modifier.fillMaxWidth(),
                 fieldPlaceholder = "Placeholder",
                 value = "",
                 onValueChange = {}
             )
-            CoreTextField(
+            CoreField(
                 modifier = Modifier.fillMaxWidth(),
                 value = "Text input field",
                 onValueChange = {}

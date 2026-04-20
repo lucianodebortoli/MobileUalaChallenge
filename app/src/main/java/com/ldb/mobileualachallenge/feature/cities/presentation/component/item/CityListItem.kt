@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.domain.extension.toggled
 import com.ldb.mobileualachallenge.core.presentation.component.button.CoreButton
+import com.ldb.mobileualachallenge.core.presentation.component.button.CoreButtonDefaults
 import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
 import com.ldb.mobileualachallenge.core.presentation.component.surface.CoreOutlinedSurface
 import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
@@ -98,7 +99,7 @@ private fun DetailsButton(
 ) {
     CoreButton(
         title = stringResource(R.string.feature_cities_action_show_details),
-        colors = ButtonDefaults.buttonColors(
+        colors = CoreButtonDefaults.colors().copy(
             containerColor = when (isSelected) {
                 true -> MaterialTheme.colorScheme.primaryContainer
                 false -> MaterialTheme.colorScheme.onPrimaryContainer

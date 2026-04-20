@@ -17,7 +17,7 @@ interface CityDao {
     @Query(
         value = "SELECT * " +
                 "FROM cities " +
-                "ORDER BY name"
+                "ORDER BY name ASC, country ASC"
     )
     fun getCities(): PagingSource<Int, CityEntity>
 
