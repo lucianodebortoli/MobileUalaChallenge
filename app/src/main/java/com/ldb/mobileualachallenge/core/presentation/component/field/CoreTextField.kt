@@ -1,12 +1,10 @@
-package com.ldb.mobileualachallenge.core.presentation.component
+package com.ldb.mobileualachallenge.core.presentation.component.field
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -26,7 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import com.ldb.mobileualachallenge.core.presentation.theme.ChallengeTheme
+import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
 import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
 
 
@@ -44,7 +42,7 @@ fun CoreTextField(
     colors: TextFieldColors = CoreTextFieldDefaults.colors(),
     onValueChange: (String) -> Unit,
     padding: PaddingValues = PaddingValues(Dimensions.Spacing.medium),
-    shape: Shape = RoundedCornerShape(Dimensions.RoundCorners.medium),
+    shape: Shape = RoundedCornerShape(Dimensions.CornerRadius.medium),
     textStyle: TextStyle = TextStyle.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -138,13 +136,8 @@ private object CoreTextFieldDefaults {
 @Preview
 @Composable
 private fun FieldPreview() {
-    ChallengeTheme {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(Dimensions.Spacing.medium),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium)
-        ) {
+    CorePreview {
+        Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium)) {
             CoreTextField(
                 modifier = Modifier.fillMaxWidth(),
                 fieldPlaceholder = "Placeholder",

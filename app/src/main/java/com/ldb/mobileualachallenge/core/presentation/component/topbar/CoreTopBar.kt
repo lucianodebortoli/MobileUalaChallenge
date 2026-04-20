@@ -1,9 +1,5 @@
-package com.ldb.mobileualachallenge.core.presentation.component
+package com.ldb.mobileualachallenge.core.presentation.component.topbar
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,8 +11,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.ldb.mobileualachallenge.core.presentation.theme.ChallengeTheme
-import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
+import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,17 +47,10 @@ fun CoreTopBar(
 @Preview
 @Composable
 private fun FieldPreview() {
-    ChallengeTheme {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(Dimensions.Spacing.medium),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium)
-        ) {
-            CoreTopBar(
-                title = "Screen title",
-                onBackClicked = {}
-            )
-        }
+    CorePreview {
+        CoreTopBar(
+            title = "Screen title",
+            onBackClicked = {}
+        )
     }
 }

@@ -5,7 +5,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ldb.mobileualachallenge.feature.cities.presentation.screens.detail.CityDetailScreen
-import com.ldb.mobileualachallenge.feature.cities.presentation.screens.list.CityListScreen
+import com.ldb.mobileualachallenge.feature.cities.presentation.screens.adaptiveList.CityAdaptiveListScreen
 import com.ldb.mobileualachallenge.feature.cities.presentation.screens.map.CityMapScreen
 
 // TODO add navArguments
@@ -17,7 +17,7 @@ fun AppNavGraph() {
         startDestination = Routes.CITY_LIST
     ) {
         composable(route = Routes.CITY_LIST) {
-            CityListScreen(navController)
+            CityAdaptiveListScreen(navController)
         }
         composable(route = Routes.CITY_MAP) {
             CityMapScreen(navController)
