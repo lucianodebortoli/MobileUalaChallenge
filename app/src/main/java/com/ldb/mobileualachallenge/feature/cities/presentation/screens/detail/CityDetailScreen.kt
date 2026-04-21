@@ -4,9 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,11 +53,11 @@ private fun CityDetailContent(
                 onBackClicked = onBackClicked
             )
         },
-        contentWindowInsets = WindowInsets.statusBars
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
         val rootModifier = Modifier
             .padding(paddingValues)
-            .consumeWindowInsets(WindowInsets.navigationBars)
+            .consumeWindowInsets(WindowInsets.safeDrawing)
         when (orientation) {
             AdaptiveOrientation.Portrait -> PortraitCityDetailContent(
                 modifier = rootModifier,

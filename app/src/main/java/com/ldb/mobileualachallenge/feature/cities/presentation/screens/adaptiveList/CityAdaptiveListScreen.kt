@@ -5,10 +5,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.windowInsetsStartWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -20,12 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.framework.AdaptiveOrientation
 import com.ldb.mobileualachallenge.core.framework.getAdaptiveOrientation
+import com.ldb.mobileualachallenge.core.presentation.component.topbar.CoreTopBar
 import com.ldb.mobileualachallenge.feature.cities.domain.model.City
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItemData
@@ -66,7 +75,7 @@ fun CityAdaptiveListScreen(
             }
         }
     }
-    AdaptiveCityListContent(
+    AdaptiveCityListLayout(
         orientation = orientation,
         syncState = syncState,
         searchQuery = searchQuery,
@@ -95,7 +104,7 @@ fun CityAdaptiveListScreen(
 }
 
 @Composable
-private fun AdaptiveCityListContent(
+private fun AdaptiveCityListLayout(
     orientation: AdaptiveOrientation,
     syncState: SyncState,
     searchQuery: String,
@@ -109,14 +118,18 @@ private fun AdaptiveCityListContent(
     onSyncRetryClicked: () -> Unit,
     onClickCity: (CityId) -> Unit
 ) {
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets.statusBars
+        topBar = {
+            CoreTopBar(
+                title = stringResource(R.string.feature_cities_list_title),
+            )
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
         val rootModifier = Modifier
             .padding(paddingValues)
-            .consumeWindowInsets(WindowInsets.navigationBars)
+            .consumeWindowInsets(WindowInsets.safeDrawing)
         when (orientation) {
             AdaptiveOrientation.Portrait -> PortraitCityListContent(
                 modifier = rootModifier,
@@ -165,9 +178,7 @@ private fun PortraitCityListContent(
     onSyncRetryClicked: () -> Unit,
     onClickCity: (CityId) -> Unit
 ) {
-    Box(
-        modifier = modifier,
-    ) {
+    Box(modifier = modifier) {
         when (syncState) {
             SyncState.Syncing -> CitySyncSection(
                 modifier = Modifier.fillMaxSize()
@@ -206,12 +217,36 @@ private fun LandscapeCityListContent(
     onSyncRetryClicked: () -> Unit,
     onClickCity: (CityId) -> Unit
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text("Landscape Liss Section")
-        Text("Landscape Map Section")
+    Box(modifier = modifier) {
+        when (syncState) {
+            SyncState.Syncing -> CitySyncSection(
+                modifier = Modifier.fillMaxSize()
+            )
+            SyncState.Error -> CityErrorSection(
+                modifier = Modifier.fillMaxSize(),
+                onRetryClicked = onSyncRetryClicked
+            )
+            SyncState.ListReady -> Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CityListSection(
+                    modifier = Modifier.weight(0.5f),
+                    searchQuery = searchQuery,
+                    onlyFavorites = favoritesOnly,
+                    selectedItemId = selectedItem?.id,
+                    items = items,
+                    onDetailsClicked = onDetailsClicked,
+                    onFavoriteClicked = onFavoriteClicked,
+                    onSearchQueryChanged = onSearchQueryChanged,
+                    onFilterButtonClicked = onFilterButtonClicked,
+                    onClickItem = onClickCity
+                )
+                Text(
+                    modifier = Modifier.weight(0.5f),
+                    text = "Landscape Map Section"
+                )
+            }
+        }
     }
 }

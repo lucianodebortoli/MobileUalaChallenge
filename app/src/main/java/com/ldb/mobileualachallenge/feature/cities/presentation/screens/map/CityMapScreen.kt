@@ -4,9 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,12 +43,12 @@ private fun CityMapContent(
                 onBackClicked = onBackClicked
             )
         },
-        contentWindowInsets = WindowInsets.statusBars
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .consumeWindowInsets(WindowInsets.navigationBars)
+                .consumeWindowInsets(WindowInsets.safeDrawing)
         ) {
             // TODO map section
         }
