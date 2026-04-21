@@ -4,41 +4,28 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.ldb.mobileualachallenge.R
-import com.ldb.mobileualachallenge.core.domain.extension.toggled
-import com.ldb.mobileualachallenge.core.presentation.component.button.CoreButton
-import com.ldb.mobileualachallenge.core.presentation.component.button.CoreButtonDefaults
 import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
 import com.ldb.mobileualachallenge.core.presentation.component.surface.CoreOutlinedSurface
 import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
-import com.ldb.mobileualachallenge.core.presentation.theme.GoldMedium
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.button.FavoriteStarButton
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.button.InfoButton
 
 @Stable
 data class CityListItemData(
@@ -104,10 +91,9 @@ fun CityListItem(
             Row {
                 FavoriteStarButton(
                     isFavorite = data.isFavorite,
-                    isSelected = isSelected,
                     onClicked = onFavoriteClicked
                 )
-                DetailsButton(
+                InfoButton(
                     isSelected = isSelected,
                     onClicked = onDetailsClicked
                 )
@@ -131,67 +117,6 @@ private fun LocationIcon(
         )
     }
 }
-
-@Composable
-private fun DetailsButton(
-    modifier: Modifier = Modifier,
-    isSelected: Boolean,
-    onClicked: () -> Unit
-) {
-    Button(
-        modifier = modifier.minimumInteractiveComponentSize(),
-        contentPadding = PaddingValues(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = when (isSelected) {
-                true -> MaterialTheme.colorScheme.primaryContainer
-                false -> MaterialTheme.colorScheme.onPrimaryContainer
-            }
-        ),
-        onClick = onClicked
-    ) {
-        Icon(
-            imageVector = Icons.Default.Info,
-            contentDescription = "Details Button",
-        )
-    }
-}
-
-@Composable
-private fun FavoriteStarButton(
-    modifier: Modifier = Modifier,
-    isFavorite: Boolean,
-    isSelected: Boolean,
-    onClicked: (Boolean) -> Unit
-) {
-    Button(
-        modifier = modifier.minimumInteractiveComponentSize(),
-        contentPadding = PaddingValues(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.primary
-        ),
-        onClick = {
-            onClicked(isFavorite.toggled())
-        }
-    ) {
-        Icon(
-            imageVector = when (isFavorite) {
-                true -> Icons.Filled.Star
-                false -> Icons.Outlined.Star
-            },
-            contentDescription = "Favorite Button",
-            tint = when (isFavorite) {
-                true -> when (isSelected) {
-                    true -> MaterialTheme.colorScheme.onTertiaryContainer
-                    false -> MaterialTheme.colorScheme.tertiary
-                }
-                false -> MaterialTheme.colorScheme.outlineVariant
-            }
-        )
-    }
-}
-
 
 val cityPreviewItems: List<CityListItemData> = listOf(
     CityListItemData(

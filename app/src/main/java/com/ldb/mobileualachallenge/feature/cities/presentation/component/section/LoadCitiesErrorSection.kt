@@ -9,15 +9,14 @@ import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.presentation.component.error.CoreErrorView
 import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
 
-
 @Composable
-fun CityMapErrorSection(
+fun LoadCitiesErrorSection(
     modifier: Modifier,
     onRetryClicked: () -> Unit
 ) {
     CoreErrorView(
         modifier = modifier,
-        title = stringResource(R.string.feature_cities_map_error),
+        title = stringResource(R.string.feature_cities_error_load_list),
         onRetryClicked = onRetryClicked
     )
 }
@@ -26,7 +25,7 @@ fun CityMapErrorSection(
 @Composable
 private fun Preview() {
     CorePreview {
-        CityMapErrorSection(
+        LoadCitiesErrorSection(
             modifier = Modifier.fillMaxSize(),
             onRetryClicked = {}
         )

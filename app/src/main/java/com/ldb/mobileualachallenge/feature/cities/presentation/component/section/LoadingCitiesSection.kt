@@ -6,18 +6,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ldb.mobileualachallenge.R
-import com.ldb.mobileualachallenge.core.presentation.component.error.CoreErrorView
 import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
+import com.ldb.mobileualachallenge.core.presentation.component.progress.CoreProgressBar
 
 @Composable
-fun CityListErrorSection(
-    modifier: Modifier,
-    onRetryClicked: () -> Unit
+fun LoadingCitiesSection(
+    modifier: Modifier = Modifier
 ) {
-    CoreErrorView(
+    CoreProgressBar(
         modifier = modifier,
-        title = stringResource(R.string.feature_cities_list_error),
-        onRetryClicked = onRetryClicked
+        title = stringResource(R.string.feature_cities_list_syncing)
     )
 }
 
@@ -25,9 +23,8 @@ fun CityListErrorSection(
 @Composable
 private fun Preview() {
     CorePreview {
-        CityListErrorSection(
-            modifier = Modifier.fillMaxSize(),
-            onRetryClicked = {}
+        LoadingCitiesSection(
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

@@ -40,10 +40,10 @@ import com.ldb.mobileualachallenge.core.presentation.component.topbar.CoreTopBar
 import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItemData
-import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListErrorSection
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.LoadCitiesErrorSection
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListSection
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityMapSection
-import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListSyncSection
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.LoadingCitiesSection
 
 @Composable
 fun CityAdaptiveListScreen(
@@ -202,10 +202,10 @@ private fun PortraitCityListContent(
 ) {
     Box(modifier = modifier) {
         when (syncState) {
-            CityListSyncState.Syncing -> CityListSyncSection(
+            CityListSyncState.Syncing -> LoadingCitiesSection(
                 modifier = Modifier.fillMaxSize()
             )
-            CityListSyncState.Error -> CityListErrorSection(
+            CityListSyncState.Error -> LoadCitiesErrorSection(
                 modifier = Modifier.fillMaxSize(),
                 onRetryClicked = onSyncRetryClicked
             )
@@ -242,10 +242,10 @@ private fun LandscapeCityListContent(
 ) {
     Box(modifier = modifier) {
         when (syncState) {
-            CityListSyncState.Syncing -> CityListSyncSection(
+            CityListSyncState.Syncing -> LoadingCitiesSection(
                 modifier = Modifier.fillMaxSize()
             )
-            CityListSyncState.Error -> CityListErrorSection(
+            CityListSyncState.Error -> LoadCitiesErrorSection(
                 modifier = Modifier.fillMaxSize(),
                 onRetryClicked = onSyncRetryClicked
             )

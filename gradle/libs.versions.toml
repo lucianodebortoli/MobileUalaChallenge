@@ -1,9 +1,12 @@
 [versions]
 activityCompose = "1.9.3"
 agp = "8.9.1"
+coilCompose = "2.6.0"
 composeBom = "2024.12.01"
 coreKtx = "1.18.0"
 espressoCore = "3.5.1"
+googleMapsCompose = "4.4.1"
+googlePlayServicesMaps = "18.2.0"
 hilt = "2.52"
 hiltNavigationCompose = "1.2.0"
 junit = "4.13.2"
@@ -19,8 +22,6 @@ paging = "3.3.2"
 retrofit = "2.11.0"
 room = "2.6.1"
 secrets = "2.0.1"
-googleMapsCompose = "4.4.1"
-googlePlayServicesMaps = "18.2.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -42,6 +43,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 google-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "googleMapsCompose" }
 google-play-services-maps = {  module = "com.google.android.gms:play-services-maps", version.ref = "googlePlayServicesMaps" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }

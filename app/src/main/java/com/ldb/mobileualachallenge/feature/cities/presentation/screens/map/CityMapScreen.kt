@@ -17,8 +17,8 @@ import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.domain.model.CoreMarker
 import com.ldb.mobileualachallenge.core.presentation.component.topbar.CoreTopBar
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityMapSection
-import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityMapErrorSection
-import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityMapLoadingSection
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.LoadCityErrorSection
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.LoadingCitySection
 
 
 @Composable
@@ -77,11 +77,11 @@ private fun CityMapLayout(
     onRetryClicked: () -> Unit
 ) {
     when (mapState) {
-        CityMapState.Error -> CityMapErrorSection(
+        CityMapState.Error -> LoadCityErrorSection(
             modifier = Modifier.fillMaxSize(),
             onRetryClicked = onRetryClicked
         )
-        CityMapState.Loading -> CityMapLoadingSection(
+        CityMapState.Loading -> LoadingCitySection(
             modifier = Modifier.fillMaxSize()
         )
         CityMapState.Ready -> CityMapSection(

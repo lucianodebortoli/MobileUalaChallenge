@@ -11,7 +11,7 @@ import com.ldb.mobileualachallenge.core.presentation.component.progress.CoreProg
 
 
 @Composable
-fun CityMapLoadingSection(
+fun LoadingCitySection(
     modifier: Modifier = Modifier
 ) {
     CoreProgressBar(
@@ -24,7 +24,7 @@ fun CityMapLoadingSection(
 @Composable
 private fun Preview() {
     CorePreview {
-        CityMapLoadingSection(
+        LoadingCitySection(
             modifier = Modifier.fillMaxSize()
         )
     }
