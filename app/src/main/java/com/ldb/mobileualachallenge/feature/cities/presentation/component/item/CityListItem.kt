@@ -6,14 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
@@ -28,8 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.domain.extension.toggled
 import com.ldb.mobileualachallenge.core.presentation.component.button.CoreButton
@@ -74,72 +73,94 @@ fun CityListItem(
             false -> MaterialTheme.colorScheme.onSurface
         },
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimensions.Spacing.medium),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.extraSmall)) {
-                Text(
-                    text = data.title,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = data.subtitle,
-                    style = MaterialTheme.typography.bodyMedium
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                LocationIcon()
+                Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.extraSmall)) {
+                    Text(
+                        text = data.title,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = data.subtitle,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            Row {
+                FavoriteStarButton(
+                    isFavorite = data.isFavorite,
+                    isSelected = isSelected,
+                    onClicked = onFavoriteClicked
                 )
                 DetailsButton(
                     isSelected = isSelected,
                     onClicked = onDetailsClicked
                 )
             }
-            FavoriteStarButton(
-                modifier = Modifier
-                    .align(Alignment.TopEnd),
-                isFavorite = data.isFavorite,
-                onClicked = onFavoriteClicked
-            )
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(Dimensions.IconSize.medium),
-                imageVector = Icons.Default.LocationOn,
-                tint = MaterialTheme.colorScheme.primaryContainer,
-                contentDescription = "Location Icon"
-            )
         }
     }
 }
 
 @Composable
+private fun LocationIcon(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.height(Dimensions.IconSize.medium)
+    ) {
+        Icon(
+            modifier = Modifier.fillMaxHeight(),
+            imageVector = Icons.Default.LocationOn,
+            contentDescription = "Location Button",
+            tint = MaterialTheme.colorScheme.primaryContainer
+        )
+    }
+}
+
+@Composable
 private fun DetailsButton(
+    modifier: Modifier = Modifier,
     isSelected: Boolean,
     onClicked: () -> Unit
 ) {
-    CoreButton(
-        title = stringResource(R.string.feature_cities_action_show_details),
-        colors = CoreButtonDefaults.colors().copy(
-            containerColor = when (isSelected) {
+    Button(
+        modifier = modifier.minimumInteractiveComponentSize(),
+        contentPadding = PaddingValues(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = when (isSelected) {
                 true -> MaterialTheme.colorScheme.primaryContainer
                 false -> MaterialTheme.colorScheme.onPrimaryContainer
-            },
-            contentColor = when (isSelected) {
-                true -> MaterialTheme.colorScheme.onPrimaryContainer
-                false -> MaterialTheme.colorScheme.primaryContainer
             }
         ),
         onClick = onClicked
-    )
+    ) {
+        Icon(
+            imageVector = Icons.Default.Info,
+            contentDescription = "Details Button",
+        )
+    }
 }
 
 @Composable
 private fun FavoriteStarButton(
     modifier: Modifier = Modifier,
     isFavorite: Boolean,
+    isSelected: Boolean,
     onClicked: (Boolean) -> Unit
 ) {
     Button(
-        modifier = modifier.size(Dimensions.IconSize.medium),
+        modifier = modifier.minimumInteractiveComponentSize(),
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
@@ -156,12 +177,16 @@ private fun FavoriteStarButton(
             },
             contentDescription = "Favorite Button",
             tint = when (isFavorite) {
-                true -> GoldMedium
+                true -> when (isSelected) {
+                    true -> MaterialTheme.colorScheme.onTertiaryContainer
+                    false -> MaterialTheme.colorScheme.tertiary
+                }
                 false -> MaterialTheme.colorScheme.outlineVariant
             }
         )
     }
 }
+
 
 val cityPreviewItems: List<CityListItemData> = listOf(
     CityListItemData(
