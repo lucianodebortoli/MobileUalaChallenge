@@ -32,10 +32,10 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class CityAdaptiveListViewModel @Inject constructor(
-    val syncCitiesUseCase: SyncCitiesUseCase,
-    val getCitiesUseCase: GetCitiesUseCase,
-    val getCityUseCase: GetCityUseCase,
-    val markCityAsFavoriteUseCase: MarkCityAsFavoriteUseCase
+    private val syncCitiesUseCase: SyncCitiesUseCase,
+    private val getCitiesUseCase: GetCitiesUseCase,
+    private val getCityUseCase: GetCityUseCase,
+    private val markCityAsFavoriteUseCase: MarkCityAsFavoriteUseCase
 ) : ViewModel() {
 
     private val _actions = Channel<CityAdaptiveListAction>()
@@ -61,10 +61,6 @@ class CityAdaptiveListViewModel @Inject constructor(
      * Implements a small debounce delay of 100 ms to prevent too frequent updates, while still being responsive.
      */
     val citiesPager: Flow<PagingData<CityListItemData>> = searchQuery
-/*        .transformLatest { latestQuery ->
-            delay(timeMillis = 100L)
-            emit(value = latestQuery)
-        }*/
         .combine(flow = favoritesOnly) { query, fav ->
             Pair(query, fav)
         }
@@ -130,6 +126,7 @@ class CityAdaptiveListViewModel @Inject constructor(
         getCityUseCase(cityId).fold(
             onSuccess = { city ->
                 _selectedCity.value = city
+                _actions.send(CityAdaptiveListAction.NavigateToMap(city = city))
             },
             onFailure = {
                 _actions.send(

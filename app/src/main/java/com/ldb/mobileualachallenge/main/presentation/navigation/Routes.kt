@@ -1,7 +1,17 @@
 package com.ldb.mobileualachallenge.main.presentation.navigation
 
-object Routes {
-    const val CITY_LIST = "city_list"
-    const val CITY_DETAIL = "city_detail"
-    const val CITY_MAP = "city_map"
+import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
+import kotlinx.serialization.Serializable
+
+sealed interface Routes {
+
+    @Serializable
+    data object CityList : Routes
+
+    @Serializable
+    data class CityMap(val cityId: CityId) : Routes
+
+    @Serializable
+    data class CityDetail(val cityId: CityId) : Routes
+
 }

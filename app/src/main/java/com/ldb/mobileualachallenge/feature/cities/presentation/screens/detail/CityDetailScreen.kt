@@ -1,6 +1,5 @@
 package com.ldb.mobileualachallenge.feature.cities.presentation.screens.detail
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -14,32 +13,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import com.ldb.mobileualachallenge.R
+import com.ldb.mobileualachallenge.core.framework.AdaptiveOrientation
+import com.ldb.mobileualachallenge.core.framework.getAdaptiveOrientation
 import com.ldb.mobileualachallenge.core.presentation.component.topbar.CoreTopBar
+import com.ldb.mobileualachallenge.feature.cities.domain.model.CityDetail
 
 @Composable
-fun CityDetailScreen(navController: NavController) {
-    val viewModel: CityDetailViewModel = hiltViewModel()
+fun CityDetailScreen(
+    viewModel: CityDetailViewModel = hiltViewModel(),
+    onScreenResult: (CityDetailResult) -> Unit
+) {
+    val configuration = LocalConfiguration.current
+    val orientation = configuration.getAdaptiveOrientation()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val cityDetail by viewModel.cityDetail.collectAsStateWithLifecycle()
     CityDetailContent(
+        orientation = orientation,
         isLoading = isLoading,
-        onBackClicked = { navController.popBackStack() },
+        cityDetail = cityDetail,
+        onBackClicked = { onScreenResult(CityDetailResult.NavigateBack) },
     )
 }
 
 @Composable
 private fun CityDetailContent(
+    orientation: AdaptiveOrientation,
     isLoading: Boolean,
+    cityDetail: CityDetail?,
     onBackClicked: () -> Unit
 ) {
-    val configuration = LocalConfiguration.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CoreTopBar(
-                title = "TODO",
+                title = cityDetail?.city?.name ?: stringResource(R.string.feature_cities_detail_title),
                 onBackClicked = onBackClicked
             )
         },
@@ -48,12 +59,12 @@ private fun CityDetailContent(
         val rootModifier = Modifier
             .padding(paddingValues)
             .consumeWindowInsets(WindowInsets.navigationBars)
-        when (configuration.orientation) {
-            Configuration.ORIENTATION_LANDSCAPE -> LandscapeCityDetailContent(
+        when (orientation) {
+            AdaptiveOrientation.Portrait -> PortraitCityDetailContent(
                 modifier = rootModifier,
                 isLoading = isLoading,
             )
-            else -> PortraitCityDetailContent(
+            AdaptiveOrientation.Landscape -> LandscapeCityDetailContent(
                 modifier = rootModifier,
                 isLoading = isLoading,
             )
@@ -69,7 +80,7 @@ private fun PortraitCityDetailContent(
     Column(
         modifier = modifier,
     ) {
-
+        Text("Portrait Screen")
     }
 }
 

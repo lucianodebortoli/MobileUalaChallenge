@@ -6,6 +6,8 @@ import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.Ci
 fun City.toItemData(): CityListItemData = CityListItemData(
     id = id,
     title = "$name - ${countryPrefix.uppercase()}",
-    subtitle = "${coordinates.latitude} - ${coordinates.longitude}",
+    subtitle = coordinates.asString(),
     isFavorite = isFavorite
 )
+
+private fun City.Coordinates.asString() = "${"%.4f".format(latitude)}°, ${"%.4f".format(longitude)}°"

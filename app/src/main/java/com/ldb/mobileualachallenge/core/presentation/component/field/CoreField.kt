@@ -45,7 +45,6 @@ fun CoreField(
     iconColors: CoreFieldIconColors = CoreFieldDefaults.iconColors(),
     padding: PaddingValues = PaddingValues(Dimensions.Spacing.medium),
     shape: Shape = RoundedCornerShape(Dimensions.CornerRadius.medium),
-    textStyle: TextStyle = TextStyle.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -62,7 +61,7 @@ fun CoreField(
         singleLine = singleLine,
         visualTransformation = visualTransformation,
         interactionSource = interactionSource,
-        textStyle = textStyle,
+        textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         decorationBox = { innerTextField ->

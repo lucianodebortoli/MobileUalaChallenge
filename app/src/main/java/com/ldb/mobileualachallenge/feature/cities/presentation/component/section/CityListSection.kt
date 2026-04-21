@@ -82,7 +82,6 @@ fun CityListSection(
                 ) { index ->
                     items[index]?.let { data ->
                         CityListItem(
-                            modifier = Modifier.animateItem(),
                             data = data,
                             isSelected = data.id == selectedItemId,
                             onDetailsClicked = {

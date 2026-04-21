@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ldb.mobileualachallenge.core.framework.AdaptiveOrientation
@@ -35,12 +34,14 @@ import com.ldb.mobileualachallenge.feature.cities.presentation.component.section
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CitySyncSection
 
 @Composable
-fun CityAdaptiveListScreen(navController: NavController) {
+fun CityAdaptiveListScreen(
+    viewModel: CityAdaptiveListViewModel = hiltViewModel(),
+    onScreenResult: (CityAdaptiveListResult) -> Unit
+) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val orientation = configuration.getAdaptiveOrientation()
     val snackbarHostState = remember { SnackbarHostState() }
-    val viewModel: CityAdaptiveListViewModel = hiltViewModel()
     val syncState by viewModel.syncState.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val favoritesOnly by viewModel.favoritesOnly.collectAsStateWithLifecycle()
@@ -50,11 +51,11 @@ fun CityAdaptiveListScreen(navController: NavController) {
         viewModel.actions.collect { action ->
             when (action) {
                 is CityAdaptiveListAction.NavigateToDetail -> {
-                    // TODO navigate to detail
+                    onScreenResult(CityAdaptiveListResult.NavigateToCityDetail(cityId = action.cityId))
                 }
                 is CityAdaptiveListAction.NavigateToMap -> {
                     if (orientation == AdaptiveOrientation.Portrait) {
-                        // TODO navigate to map
+                        onScreenResult(CityAdaptiveListResult.NavigateToCityMap(cityId = action.city.id))
                     }
                 }
                 is CityAdaptiveListAction.ShowSnackbar -> {
