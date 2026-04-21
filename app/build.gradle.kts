@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.android.secrets)
 }
 
 android {
@@ -49,7 +50,7 @@ ksp {
 
 dependencies {
 
-    // Android
+    // AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
@@ -86,6 +87,10 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
+
+    // Maps
+    implementation(libs.google.maps.compose)
+    implementation(libs.google.play.services.maps)
 
     // Testing
     testImplementation(libs.junit)
