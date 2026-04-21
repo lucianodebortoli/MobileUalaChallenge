@@ -10,6 +10,7 @@ sealed class CityAdaptiveListEvent {
     data class OnSearchQueryChanged(val query: String) : CityAdaptiveListEvent()
 
     data object OnSyncRetryClicked : CityAdaptiveListEvent()
+    data object OnMenuReloadClicked : CityAdaptiveListEvent()
     data object OnFilterButtonClicked : CityAdaptiveListEvent()
 
 }

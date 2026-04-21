@@ -1,5 +1,6 @@
 package com.ldb.mobileualachallenge.core.presentation.component.topbar
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -21,7 +22,8 @@ import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePrevi
 fun CoreTopBar(
     modifier: Modifier = Modifier,
     title: String,
-    onBackClicked: (() -> Unit)? = null
+    onBackClicked: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
         modifier = modifier,
@@ -44,7 +46,8 @@ fun CoreTopBar(
                     )
                 }
             }
-        }
+        },
+        actions = actions
     )
 }
 

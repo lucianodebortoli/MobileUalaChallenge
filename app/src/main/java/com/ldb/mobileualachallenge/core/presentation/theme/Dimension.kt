@@ -28,9 +28,13 @@ data class BorderDimensions(
     val large: Dp
 )
 
-object Dimensions {
+data class ElevationDimensions(
+    val small: Dp,
+    val medium: Dp,
+    val large: Dp
+)
 
-    val Zero: Dp = 0.dp
+object Dimensions {
 
     val Spacing = SpacingDimensions(
         extraSmall = 4.dp,
@@ -55,6 +59,12 @@ object Dimensions {
         small = 1.dp,
         medium = 2.dp,
         large = 3.dp
+    )
+
+    val Elevation = ElevationDimensions(
+        small = 2.dp,
+        medium = 4.dp,
+        large = 6.dp
     )
 
 }

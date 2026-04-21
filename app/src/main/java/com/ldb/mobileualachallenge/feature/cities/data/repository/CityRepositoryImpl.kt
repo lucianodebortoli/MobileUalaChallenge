@@ -14,6 +14,7 @@ import com.ldb.mobileualachallenge.feature.cities.data.local.dao.CityDao
 import com.ldb.mobileualachallenge.feature.cities.data.local.dao.CityFavoriteJoinedDao
 import com.ldb.mobileualachallenge.feature.cities.data.local.dao.FavoriteCityDao
 import com.ldb.mobileualachallenge.feature.cities.data.local.entity.FavoriteCityEntity
+import com.ldb.mobileualachallenge.feature.cities.data.local.preferences.CitySyncPreferences
 import com.ldb.mobileualachallenge.feature.cities.data.mapper.toCity
 import com.ldb.mobileualachallenge.feature.cities.data.mapper.toLocalEntity
 import com.ldb.mobileualachallenge.feature.cities.data.remote.api.GistApi
@@ -36,10 +37,14 @@ class CityRepositoryImpl @Inject constructor(
     private val favoriteCityDao: FavoriteCityDao,
     private val cityFavoriteJoinedDao: CityFavoriteJoinedDao,
     private val gistApi: GistApi,
-    private val wikiApi: WikiApi
+    private val wikiApi: WikiApi,
+    private val citySyncPreferences: CitySyncPreferences
 ) : CityRepository {
 
-    override suspend fun syncCities(): Result<Unit> {
+    override suspend fun syncCities(force: Boolean): Result<Unit> {
+        if (!force && citySyncPreferences.isSyncRecent()) {
+            return Result.success(Unit)
+        }
         return withContext(Dispatchers.IO) {
             runCatching {
                 val gistResponse = gistApi.getAllCities()
@@ -52,6 +57,7 @@ class CityRepositoryImpl @Inject constructor(
                         )
                     }
                 }
+                citySyncPreferences.setLastCitiesSyncTimestampMs(System.currentTimeMillis())
             }.onFailure { exception ->
                 Log.e(LOG_TAG, "syncCities exception $exception")
             }

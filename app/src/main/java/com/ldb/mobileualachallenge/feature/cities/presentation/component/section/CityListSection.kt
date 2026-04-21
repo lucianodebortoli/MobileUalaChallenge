@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +25,6 @@ import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.presentation.component.empty.CoreEmptyView
 import com.ldb.mobileualachallenge.core.presentation.component.field.CoreSearchFavoritesField
 import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
-import com.ldb.mobileualachallenge.core.presentation.component.progress.CoreProgressBar
 import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItem
@@ -108,29 +106,8 @@ fun CityListSection(
 
 @Preview
 @Composable
-private fun LoadingPreview() {
-    CorePreview(padding = 0.dp) {
-        val emptyCities: List<CityListItemData> = emptyList()
-        val flow = flowOf(PagingData.from(emptyCities))
-        val items = flow.collectAsLazyPagingItems()
-        CityListSection(
-            searchQuery = "",
-            items = items,
-            onlyFavorites = false,
-            selectedItemId = 0,
-            onFavoriteClicked = { _, _ -> },
-            onDetailsClicked = {},
-            onSearchQueryChanged = {},
-            onFilterButtonClicked = {},
-            onClickItem = {}
-        )
-    }
-}
-
-@Preview
-@Composable
 private fun EmptyPreview() {
-    CorePreview {
+    CorePreview(padding = 0.dp) {
         val flow = flowOf(
             value = PagingData.empty<CityListItemData>(
                 sourceLoadStates = LoadStates(
@@ -158,7 +135,7 @@ private fun EmptyPreview() {
 @Preview
 @Composable
 private fun ListPreview() {
-    CorePreview {
+    CorePreview(padding = 0.dp) {
         val flow = flowOf(PagingData.from(cityPreviewItems))
         val items = flow.collectAsLazyPagingItems()
         CityListSection(

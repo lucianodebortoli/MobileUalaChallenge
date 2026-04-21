@@ -15,17 +15,20 @@ import com.ldb.mobileualachallenge.feature.cities.domain.usecase.SyncCitiesUseCa
 import com.ldb.mobileualachallenge.feature.cities.domain.usecase.MarkCityAsFavoriteUseCase
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItemData
 import com.ldb.mobileualachallenge.feature.cities.presentation.mapper.toItemData
+import com.ldb.mobileualachallenge.feature.cities.presentation.mapper.toMarker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -51,7 +54,22 @@ class CityAdaptiveListViewModel @Inject constructor(
     val favoritesOnly = _favoritesOnly.asStateFlow()
 
     private val _selectedCity = MutableStateFlow<City?>(value = null)
-    val selectedCity = _selectedCity.asStateFlow()
+
+    val selectedCityId = _selectedCity.map { city ->
+        city?.id
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
+
+    val selectedCityMarker = _selectedCity.map { city ->
+        city?.toMarker()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
     /**
      * The flow of paginated items.
@@ -77,7 +95,7 @@ class CityAdaptiveListViewModel @Inject constructor(
         .cachedIn(viewModelScope)
 
     init {
-        startSyncingProcess()
+        startSyncingProcess(forceSync = false)
     }
 
     /** Handles events from the UI layer. */
@@ -88,6 +106,7 @@ class CityAdaptiveListViewModel @Inject constructor(
             is CityAdaptiveListEvent.OnCityFavoriteChanged -> onCityFavoriteButtonClicked(event.cityId, event.isFavorite)
             is CityAdaptiveListEvent.OnSearchQueryChanged -> onSearchQueryChanged(event.query)
             is CityAdaptiveListEvent.OnSyncRetryClicked -> onSyncRetryClicked()
+            is CityAdaptiveListEvent.OnMenuReloadClicked -> onMenuReloadClicked()
             is CityAdaptiveListEvent.OnCityClicked -> onCityClicked(event.cityId)
         }
     }
@@ -139,12 +158,16 @@ class CityAdaptiveListViewModel @Inject constructor(
     }
 
     private fun onSyncRetryClicked() {
-        startSyncingProcess()
+        startSyncingProcess(forceSync = true)
     }
 
-    private fun startSyncingProcess() = viewModelScope.launch {
+    private fun onMenuReloadClicked() {
+        startSyncingProcess(forceSync = true)
+    }
+
+    private fun startSyncingProcess(forceSync: Boolean) = viewModelScope.launch {
         _syncState.value = SyncState.Syncing
-        syncCitiesUseCase().fold(
+        syncCitiesUseCase(force = forceSync).fold(
             onSuccess = {
                 _syncState.value = SyncState.ListReady
             },

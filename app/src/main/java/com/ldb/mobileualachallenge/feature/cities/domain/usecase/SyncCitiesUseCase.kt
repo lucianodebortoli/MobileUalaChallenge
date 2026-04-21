@@ -10,8 +10,8 @@ class SyncCitiesUseCase @Inject constructor(
     private val repository: CityRepository
 )  {
 
-    suspend operator fun invoke(): Result<Unit> {
-        return repository.syncCities()
+    suspend operator fun invoke(force: Boolean = false): Result<Unit> {
+        return repository.syncCities(force = force)
     }
 
 }

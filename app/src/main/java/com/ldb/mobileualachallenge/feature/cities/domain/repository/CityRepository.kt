@@ -11,9 +11,10 @@ interface CityRepository {
     /**
      * Syncs all cities.
      * Intended to be used for loading all cities during initialization.
+     * @param force runs sync even if it was synced recently, otherwise skips sync.
      * @return a [Result] for handling sync errors.
      */
-    suspend fun syncCities(): Result<Unit>
+    suspend fun syncCities(force: Boolean): Result<Unit>
 
     /**
      * Gets the city based on its id.

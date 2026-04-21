@@ -5,25 +5,26 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.windowInsetsStartWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,12 +35,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.framework.AdaptiveOrientation
 import com.ldb.mobileualachallenge.core.framework.getAdaptiveOrientation
+import com.ldb.mobileualachallenge.core.domain.model.CoreMarker
 import com.ldb.mobileualachallenge.core.presentation.component.topbar.CoreTopBar
-import com.ldb.mobileualachallenge.feature.cities.domain.model.City
+import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItemData
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityErrorSection
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListSection
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityMapSection
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CitySyncSection
 
 @Composable
@@ -54,7 +57,8 @@ fun CityAdaptiveListScreen(
     val syncState by viewModel.syncState.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val favoritesOnly by viewModel.favoritesOnly.collectAsStateWithLifecycle()
-    val selectedItem by viewModel.selectedCity.collectAsStateWithLifecycle()
+    val selectedItemId by viewModel.selectedCityId.collectAsStateWithLifecycle()
+    val selectedMarker by viewModel.selectedCityMarker.collectAsStateWithLifecycle()
     val items = viewModel.citiesPager.collectAsLazyPagingItems()
     LaunchedEffect(Unit) {
         viewModel.actions.collect { action ->
@@ -80,7 +84,8 @@ fun CityAdaptiveListScreen(
         syncState = syncState,
         searchQuery = searchQuery,
         favoritesOnly = favoritesOnly,
-        selectedItem = selectedItem,
+        selectedItemId = selectedItemId,
+        selectedMarker = selectedMarker,
         items = items,
         onDetailsClicked = { cityId ->
             viewModel.onEvent(CityAdaptiveListEvent.OnCityDetailsClicked(cityId))
@@ -97,6 +102,9 @@ fun CityAdaptiveListScreen(
         onSyncRetryClicked = {
             viewModel.onEvent(CityAdaptiveListEvent.OnSyncRetryClicked)
         },
+        onMenuReloadClicked = {
+            viewModel.onEvent(CityAdaptiveListEvent.OnMenuReloadClicked)
+        },
         onClickCity = { cityId ->
             viewModel.onEvent(CityAdaptiveListEvent.OnCityClicked(cityId))
         }
@@ -109,13 +117,15 @@ private fun AdaptiveCityListLayout(
     syncState: SyncState,
     searchQuery: String,
     favoritesOnly: Boolean,
-    selectedItem: City?,
+    selectedItemId: CityId?,
+    selectedMarker: CoreMarker?,
     items: LazyPagingItems<CityListItemData>,
     onDetailsClicked: (CityId) -> Unit,
     onFavoriteClicked: (CityId, Boolean) -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onFilterButtonClicked: () -> Unit,
     onSyncRetryClicked: () -> Unit,
+    onMenuReloadClicked: () -> Unit,
     onClickCity: (CityId) -> Unit
 ) {
     Scaffold(
@@ -123,6 +133,17 @@ private fun AdaptiveCityListLayout(
         topBar = {
             CoreTopBar(
                 title = stringResource(R.string.feature_cities_list_title),
+                actions = {
+                    if (syncState == SyncState.ListReady) {
+                        IconButton(onClick = onMenuReloadClicked) {
+                            Icon(
+                                imageVector = Icons.Filled.Refresh,
+                                contentDescription = "Reload Button",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing
@@ -136,7 +157,7 @@ private fun AdaptiveCityListLayout(
                 syncState = syncState,
                 searchQuery = searchQuery,
                 favoritesOnly = favoritesOnly,
-                selectedItem = selectedItem,
+                selectedItemId = selectedItemId,
                 items = items,
                 onDetailsClicked = onDetailsClicked,
                 onFavoriteClicked = onFavoriteClicked,
@@ -150,7 +171,8 @@ private fun AdaptiveCityListLayout(
                 syncState = syncState,
                 searchQuery = searchQuery,
                 favoritesOnly = favoritesOnly,
-                selectedItem = selectedItem,
+                selectedItemId = selectedItemId,
+                selectedMarker = selectedMarker,
                 items = items,
                 onDetailsClicked = onDetailsClicked,
                 onFavoriteClicked = onFavoriteClicked,
@@ -169,7 +191,7 @@ private fun PortraitCityListContent(
     syncState: SyncState,
     searchQuery: String,
     favoritesOnly: Boolean,
-    selectedItem: City?,
+    selectedItemId: CityId?,
     items: LazyPagingItems<CityListItemData>,
     onDetailsClicked: (CityId) -> Unit,
     onFavoriteClicked: (CityId, Boolean) -> Unit,
@@ -190,7 +212,7 @@ private fun PortraitCityListContent(
             SyncState.ListReady -> CityListSection(
                 searchQuery = searchQuery,
                 onlyFavorites = favoritesOnly,
-                selectedItemId = selectedItem?.id,
+                selectedItemId = selectedItemId,
                 items = items,
                 onDetailsClicked = onDetailsClicked,
                 onFavoriteClicked = onFavoriteClicked,
@@ -208,7 +230,8 @@ private fun LandscapeCityListContent(
     syncState: SyncState,
     searchQuery: String,
     favoritesOnly: Boolean,
-    selectedItem: City?,
+    selectedItemId: CityId?,
+    selectedMarker: CoreMarker?,
     items: LazyPagingItems<CityListItemData>,
     onDetailsClicked: (CityId) -> Unit,
     onFavoriteClicked: (CityId, Boolean) -> Unit,
@@ -231,10 +254,10 @@ private fun LandscapeCityListContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CityListSection(
-                    modifier = Modifier.weight(0.5f),
+                    modifier = Modifier.weight(0.45f),
                     searchQuery = searchQuery,
                     onlyFavorites = favoritesOnly,
-                    selectedItemId = selectedItem?.id,
+                    selectedItemId = selectedItemId,
                     items = items,
                     onDetailsClicked = onDetailsClicked,
                     onFavoriteClicked = onFavoriteClicked,
@@ -242,9 +265,17 @@ private fun LandscapeCityListContent(
                     onFilterButtonClicked = onFilterButtonClicked,
                     onClickItem = onClickCity
                 )
-                Text(
-                    modifier = Modifier.weight(0.5f),
-                    text = "Landscape Map Section"
+                CityMapSection(
+                    modifier = Modifier
+                        .weight(0.55f)
+                        .fillMaxHeight()
+                        .padding(Dimensions.Spacing.medium)
+                        .clip(shape = RoundedCornerShape(Dimensions.CornerRadius.medium))
+                        .shadow(
+                            elevation = Dimensions.Elevation.medium,
+                            shape = RoundedCornerShape(Dimensions.CornerRadius.medium)
+                        ),
+                    marker = selectedMarker
                 )
             }
         }

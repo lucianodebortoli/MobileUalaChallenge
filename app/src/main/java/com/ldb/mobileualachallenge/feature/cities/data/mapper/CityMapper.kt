@@ -1,5 +1,6 @@
 package com.ldb.mobileualachallenge.feature.cities.data.mapper
 
+import com.ldb.mobileualachallenge.core.domain.model.CoreCoordinates
 import com.ldb.mobileualachallenge.feature.cities.data.local.entity.CityEntity
 import com.ldb.mobileualachallenge.feature.cities.data.local.entity.CityFavoriteEmbeddedEntity
 import com.ldb.mobileualachallenge.feature.cities.data.remote.dto.GistCityDto
@@ -23,7 +24,7 @@ fun CityFavoriteEmbeddedEntity.toCity(): City = City(
     id = city.id,
     countryPrefix = city.country,
     name = city.name,
-    coordinates = City.Coordinates(
+    coordinates = CoreCoordinates(
         latitude = city.latitude,
         longitude = city.longitude
     ),
