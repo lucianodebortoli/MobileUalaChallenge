@@ -9,13 +9,14 @@ import com.ldb.mobileualachallenge.R
 import com.ldb.mobileualachallenge.core.presentation.component.preview.CorePreview
 import com.ldb.mobileualachallenge.core.presentation.component.progress.CoreProgressBar
 
+
 @Composable
-fun CitySyncSection(
+fun CityMapLoadingSection(
     modifier: Modifier = Modifier
 ) {
     CoreProgressBar(
         modifier = modifier,
-        title = stringResource(R.string.feature_cities_list_syncing)
+        title = stringResource(R.string.feature_cities_map_loading)
     )
 }
 
@@ -23,7 +24,7 @@ fun CitySyncSection(
 @Composable
 private fun Preview() {
     CorePreview {
-        CitySyncSection(
+        CityMapLoadingSection(
             modifier = Modifier.fillMaxSize()
         )
     }

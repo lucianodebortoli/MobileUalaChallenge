@@ -44,7 +44,7 @@ class CityAdaptiveListViewModel @Inject constructor(
     private val _actions = Channel<CityAdaptiveListAction>()
     val actions = _actions.receiveAsFlow()
 
-    private val _syncState = MutableStateFlow<SyncState>(value = SyncState.Syncing)
+    private val _syncState = MutableStateFlow<CityListSyncState>(value = CityListSyncState.Syncing)
     val syncState = _syncState.asStateFlow()
 
     private val _searchQuery = MutableStateFlow(value = "")
@@ -98,7 +98,6 @@ class CityAdaptiveListViewModel @Inject constructor(
         startSyncingProcess(forceSync = false)
     }
 
-    /** Handles events from the UI layer. */
     fun onEvent(event: CityAdaptiveListEvent) {
         when (event) {
             is CityAdaptiveListEvent.OnFilterButtonClicked -> onFilterButtonClicked()
@@ -166,13 +165,13 @@ class CityAdaptiveListViewModel @Inject constructor(
     }
 
     private fun startSyncingProcess(forceSync: Boolean) = viewModelScope.launch {
-        _syncState.value = SyncState.Syncing
+        _syncState.value = CityListSyncState.Syncing
         syncCitiesUseCase(force = forceSync).fold(
             onSuccess = {
-                _syncState.value = SyncState.ListReady
+                _syncState.value = CityListSyncState.ListReady
             },
             onFailure = {
-                _syncState.value = SyncState.Error
+                _syncState.value = CityListSyncState.Error
             }
         )
     }

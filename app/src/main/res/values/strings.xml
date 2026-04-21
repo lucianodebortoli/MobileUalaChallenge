@@ -10,7 +10,9 @@
     <string name="feature_cities_list_empty">No cities found</string>
     <string name="feature_cities_list_title">Cities</string>
     <string name="feature_cities_list_error">Error loading cities!</string>
+    <string name="feature_cities_map_error">Error loading city!</string>
     <string name="feature_cities_list_syncing">Loading cities…</string>
+    <string name="feature_cities_map_loading">Loading city…</string>
     <string name="feature_cities_map_title">City Map</string>
 
 </resources>

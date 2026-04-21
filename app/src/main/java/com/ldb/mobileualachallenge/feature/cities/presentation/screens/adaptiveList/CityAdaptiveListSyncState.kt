@@ -1,7 +1,7 @@
 package com.ldb.mobileualachallenge.feature.cities.presentation.screens.adaptiveList
 
-sealed class SyncState {
-    data object Syncing : SyncState()
-    data object Error : SyncState()
-    data object ListReady : SyncState()
+sealed class CityListSyncState {
+    data object Syncing : CityListSyncState()
+    data object Error : CityListSyncState()
+    data object ListReady : CityListSyncState()
 }

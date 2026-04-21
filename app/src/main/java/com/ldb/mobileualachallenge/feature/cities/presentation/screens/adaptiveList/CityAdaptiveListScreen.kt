@@ -40,10 +40,10 @@ import com.ldb.mobileualachallenge.core.presentation.component.topbar.CoreTopBar
 import com.ldb.mobileualachallenge.core.presentation.theme.Dimensions
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.CityListItemData
-import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityErrorSection
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListErrorSection
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListSection
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityMapSection
-import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CitySyncSection
+import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityListSyncSection
 
 @Composable
 fun CityAdaptiveListScreen(
@@ -114,7 +114,7 @@ fun CityAdaptiveListScreen(
 @Composable
 private fun AdaptiveCityListLayout(
     orientation: AdaptiveOrientation,
-    syncState: SyncState,
+    syncState: CityListSyncState,
     searchQuery: String,
     favoritesOnly: Boolean,
     selectedItemId: CityId?,
@@ -134,7 +134,7 @@ private fun AdaptiveCityListLayout(
             CoreTopBar(
                 title = stringResource(R.string.feature_cities_list_title),
                 actions = {
-                    if (syncState == SyncState.ListReady) {
+                    if (syncState == CityListSyncState.ListReady) {
                         IconButton(onClick = onMenuReloadClicked) {
                             Icon(
                                 imageVector = Icons.Filled.Refresh,
@@ -188,7 +188,7 @@ private fun AdaptiveCityListLayout(
 @Composable
 private fun PortraitCityListContent(
     modifier: Modifier,
-    syncState: SyncState,
+    syncState: CityListSyncState,
     searchQuery: String,
     favoritesOnly: Boolean,
     selectedItemId: CityId?,
@@ -202,14 +202,14 @@ private fun PortraitCityListContent(
 ) {
     Box(modifier = modifier) {
         when (syncState) {
-            SyncState.Syncing -> CitySyncSection(
+            CityListSyncState.Syncing -> CityListSyncSection(
                 modifier = Modifier.fillMaxSize()
             )
-            SyncState.Error -> CityErrorSection(
+            CityListSyncState.Error -> CityListErrorSection(
                 modifier = Modifier.fillMaxSize(),
                 onRetryClicked = onSyncRetryClicked
             )
-            SyncState.ListReady -> CityListSection(
+            CityListSyncState.ListReady -> CityListSection(
                 searchQuery = searchQuery,
                 onlyFavorites = favoritesOnly,
                 selectedItemId = selectedItemId,
@@ -227,7 +227,7 @@ private fun PortraitCityListContent(
 @Composable
 private fun LandscapeCityListContent(
     modifier: Modifier,
-    syncState: SyncState,
+    syncState: CityListSyncState,
     searchQuery: String,
     favoritesOnly: Boolean,
     selectedItemId: CityId?,
@@ -242,14 +242,14 @@ private fun LandscapeCityListContent(
 ) {
     Box(modifier = modifier) {
         when (syncState) {
-            SyncState.Syncing -> CitySyncSection(
+            CityListSyncState.Syncing -> CityListSyncSection(
                 modifier = Modifier.fillMaxSize()
             )
-            SyncState.Error -> CityErrorSection(
+            CityListSyncState.Error -> CityListErrorSection(
                 modifier = Modifier.fillMaxSize(),
                 onRetryClicked = onSyncRetryClicked
             )
-            SyncState.ListReady -> Row(
+            CityListSyncState.ListReady -> Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
