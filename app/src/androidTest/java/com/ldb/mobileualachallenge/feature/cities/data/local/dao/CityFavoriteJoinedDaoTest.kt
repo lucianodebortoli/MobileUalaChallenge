@@ -15,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
+ * Tests for testing the search algorithm given the query and filter inputs.
  * Since the [CityFavoriteJoinedDao] uses [CityDao] and [FavoriteCityDao],
  * This Test also tests the other Daos indirectly.
  */

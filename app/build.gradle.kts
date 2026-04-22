@@ -45,6 +45,7 @@ android {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.isIncludeAndroidResources = true
     }
 }
 
@@ -100,13 +101,13 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Testing
-
     testImplementation(libs.junit)
     testImplementation(libs.google.truth)
     testImplementation(libs.mockk.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.paging.testing)
+    testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.mockk.android) {
