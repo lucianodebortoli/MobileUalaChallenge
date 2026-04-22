@@ -30,6 +30,16 @@ object NetworkModule {
     @Singleton
     fun provideOkHttp(): OkHttpClient {
         return OkHttpClient.Builder().apply {
+            addInterceptor { chain ->
+                chain.proceed(
+                    request = chain.request().newBuilder().apply {
+                        header(
+                            name = "User-Agent",
+                            value = "MobileUalaChallenge/1.0 (https://github.com/lucianodebortoli/MobileUalaChallenge)"
+                        )
+                    }.build()
+                )
+            }
             addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY

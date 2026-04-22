@@ -19,13 +19,14 @@ import com.ldb.mobileualachallenge.feature.cities.data.mapper.toCity
 import com.ldb.mobileualachallenge.feature.cities.data.mapper.toLocalEntity
 import com.ldb.mobileualachallenge.feature.cities.data.remote.api.GistApi
 import com.ldb.mobileualachallenge.feature.cities.data.remote.api.WikiApi
+import com.ldb.mobileualachallenge.feature.cities.data.remote.dto.WikiSearchDto
+import com.ldb.mobileualachallenge.feature.cities.data.remote.dto.WikiSummaryDto
 import com.ldb.mobileualachallenge.feature.cities.domain.model.City
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityDetail
 import com.ldb.mobileualachallenge.feature.cities.domain.model.CityId
 import com.ldb.mobileualachallenge.feature.cities.domain.repository.CityRepository
 import com.ldb.mobileualachallenge.main.data.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -100,19 +101,47 @@ class CityRepositoryImpl @Inject constructor(
             runCatching {
                 val cityEntity = cityFavoriteJoinedDao.getCity(cityId) ?: throw EmptyDataException()
                 val city = cityEntity.toCity()
-                val cityNameQuery = city.name.replace(" ","_")
-                val wikiSummaryDeferred = async { wikiApi.getSummary(title = cityNameQuery) }
-                val wikiSearchDeferred = async { wikiApi.searchPage(query = cityNameQuery) }
-                val wikiSummaryDto = wikiSummaryDeferred.await().takeIf { it.isSuccessful }?.body()
-                val wikiSearchPageDto = wikiSearchDeferred.await().takeIf { it.isSuccessful }?.body()?.pages?.first()
-                CityDetail(
-                    city = city,
-                    additionalInfo = CityDetail.AdditionalInfo(
-                        shortDescription = wikiSummaryDto?.description ?: wikiSearchPageDto?.description,
-                        longDescription = wikiSummaryDto?.extract ?: wikiSearchPageDto?.excerptHtml?.cleanHtml(),
-                        imageUrl = wikiSummaryDto?.image?.url ?: wikiSummaryDto?.thumbnail?.url ?: wikiSearchPageDto?.thumbnail?.url
+                val baseQuery = city.name.replace(" ", "_")
+                // 1. Try using city name with city suffix, to get more precise summary.
+                val suffixSummaryResponse = wikiApi.getSummary(title = "${baseQuery}_City")
+                if (suffixSummaryResponse.isSuccessful) {
+                    val dto = suffixSummaryResponse.body()
+                    return@runCatching CityDetail(
+                        city = city,
+                        additionalInfo = CityDetail.AdditionalInfo(
+                            shortDescription = dto?.description,
+                            longDescription = dto?.extract,
+                            imageUrl = dto?.image?.url
+                        )
                     )
-                )
+                }
+                // 2. Try to use just city name for the summary.
+                val summaryResponse = wikiApi.getSummary(title = baseQuery)
+                if (summaryResponse.isSuccessful) {
+                    val dto = summaryResponse.body()
+                    return@runCatching CityDetail(
+                        city = city,
+                        additionalInfo = CityDetail.AdditionalInfo(
+                            shortDescription = dto?.description,
+                            longDescription = dto?.extract,
+                            imageUrl = dto?.image?.url
+                        )
+                    )
+                }
+                // 3. Finally, just use the result of the first search result.
+                val searchResponse = wikiApi.searchPage(query = baseQuery)
+                if (searchResponse.isSuccessful) {
+                    val dto = searchResponse.body()?.pages?.first()
+                    return@runCatching CityDetail(
+                        city = city,
+                        additionalInfo = CityDetail.AdditionalInfo(
+                            shortDescription = dto?.description,
+                            longDescription = dto?.excerptHtml?.cleanHtml(),
+                            imageUrl = dto?.thumbnail?.url
+                        )
+                    )
+                }
+                throw EmptyDataException()
             }.onFailure { exception ->
                 Log.e(LOG_TAG, "getCityDetail exception $exception")
             }

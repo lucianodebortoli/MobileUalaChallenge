@@ -22,7 +22,7 @@ fun GistCityDto.toLocalEntity() = CityEntity(
 /** Maps local [CityFavoriteEmbeddedEntity] to domain [City] */
 fun CityFavoriteEmbeddedEntity.toCity(): City = City(
     id = city.id,
-    countryPrefix = city.country,
+    countryCode = city.country,
     name = city.name,
     coordinates = CoreCoordinates(
         latitude = city.latitude,

@@ -7,12 +7,12 @@ import com.ldb.mobileualachallenge.feature.cities.presentation.component.item.Ci
 
 fun City.toItemData(): CityListItemData = CityListItemData(
     id = id,
-    title = "$name - ${countryPrefix.uppercase()}",
+    title = "$name - ${countryCode.uppercase()}",
     subtitle = coordinates.asString(),
     isFavorite = isFavorite
 )
 
-private fun CoreCoordinates.asString() = "${"%.4f".format(latitude)}°, ${"%.4f".format(longitude)}°"
+fun CoreCoordinates.asString() = "${"%.4f".format(latitude)}°, ${"%.4f".format(longitude)}°"
 
 fun City.toMarker(): CoreMarker = CoreMarker(
     title = name,

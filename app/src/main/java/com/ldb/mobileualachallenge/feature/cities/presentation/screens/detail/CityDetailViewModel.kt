@@ -11,6 +11,7 @@ import com.ldb.mobileualachallenge.feature.cities.domain.usecase.GetCityDetailUs
 import com.ldb.mobileualachallenge.feature.cities.domain.usecase.MarkCityAsFavoriteUseCase
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityDescriptionData
 import com.ldb.mobileualachallenge.feature.cities.presentation.component.section.CityImageData
+import com.ldb.mobileualachallenge.feature.cities.presentation.mapper.asString
 import com.ldb.mobileualachallenge.main.presentation.navigation.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -53,7 +54,9 @@ class CityDetailViewModel @Inject constructor(
     val cityDescriptionData: StateFlow<CityDescriptionData> = _cityDetail.map { detail ->
         CityDescriptionData(
             summary = detail?.additionalInfo?.shortDescription,
-            description = detail?.additionalInfo?.longDescription
+            description = detail?.additionalInfo?.longDescription,
+            countryCode = detail?.city?.countryCode,
+            coordinates = detail?.city?.coordinates?.asString(),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -63,7 +66,6 @@ class CityDetailViewModel @Inject constructor(
 
     val cityImageData: StateFlow<CityImageData> = _cityDetail.map { detail ->
         CityImageData(
-            title = detail?.city?.name,
             url = detail?.additionalInfo?.imageUrl,
             isFavorite = detail?.city?.isFavorite
         )
@@ -107,7 +109,6 @@ class CityDetailViewModel @Inject constructor(
     }
 
     private fun fetchCityDetail(cityId: CityId) = viewModelScope.launch {
-        _detailState.value = CityDetailState.Loading
         getCityDetailUseCase(cityId).fold(
             onSuccess = { detail ->
                 _cityDetail.value = detail

@@ -118,7 +118,7 @@ private fun LocationIcon(
     }
 }
 
-val cityPreviewItems: List<CityListItemData> = listOf(
+fun cityPreviewItems(): List<CityListItemData> = listOf(
     CityListItemData(
         id = 0,
         title = "Buenos Aires - AR",
@@ -144,7 +144,7 @@ val cityPreviewItems: List<CityListItemData> = listOf(
 private fun Preview() {
     CorePreview {
         Column(verticalArrangement = Arrangement.spacedBy(Dimensions.Spacing.medium)) {
-            cityPreviewItems.forEachIndexed { index, data ->
+            cityPreviewItems().forEachIndexed { index, data ->
                 CityListItem(
                     data = data,
                     isSelected = index % 2 == 1,

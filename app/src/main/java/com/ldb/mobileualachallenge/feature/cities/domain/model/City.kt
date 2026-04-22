@@ -6,7 +6,7 @@ typealias CityId = Long
 
 data class City(
     val id: CityId,
-    val countryPrefix: String,
+    val countryCode: String,
     val name: String,
     val coordinates: CoreCoordinates,
     val isFavorite: Boolean

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -108,15 +109,17 @@ fun CityListSection(
 @Composable
 private fun EmptyPreview() {
     CorePreview(padding = 0.dp) {
-        val flow = flowOf(
-            value = PagingData.empty<CityListItemData>(
-                sourceLoadStates = LoadStates(
-                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                    append = LoadState.NotLoading(endOfPaginationReached = true)
+        val flow = remember {
+            flowOf(
+                value = PagingData.empty<CityListItemData>(
+                    sourceLoadStates = LoadStates(
+                        refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                        prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                        append = LoadState.NotLoading(endOfPaginationReached = true)
+                    )
                 )
             )
-        )
+        }
         val items = flow.collectAsLazyPagingItems()
         CityListSection(
             searchQuery = "",
@@ -136,7 +139,9 @@ private fun EmptyPreview() {
 @Composable
 private fun ListPreview() {
     CorePreview(padding = 0.dp) {
-        val flow = flowOf(PagingData.from(cityPreviewItems))
+        val flow = remember {
+            flowOf(PagingData.from(cityPreviewItems()))
+        }
         val items = flow.collectAsLazyPagingItems()
         CityListSection(
             searchQuery = "",
