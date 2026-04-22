@@ -42,6 +42,10 @@ android {
         compose = true
         buildConfig = true
     }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 ksp {
@@ -100,10 +104,15 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.google.truth)
     testImplementation(libs.mockk.mockk)
-    testImplementation(libs.squareup.okhttp3.mockwebserver)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.paging.testing)
 
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.mockk.android) {
+        exclude(group = "org.junit.jupiter")
+        exclude(group = "org.junit.platform")
+    }
     androidTestImplementation(libs.google.truth)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
